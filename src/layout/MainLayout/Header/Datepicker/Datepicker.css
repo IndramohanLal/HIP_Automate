@@ -1,0 +1,11 @@
+/* Datepicker.css */
+.datepicker-input {
+  border: 1px solid #ccc; /* Add a border */
+  padding: 10px; /* Add some padding */
+  border-radius: 10px; /* Add border-radius for rounded corners */
+  font-size: 12px; /* Adjust the font size */
+  outline: none; /* Remove the default focus outline */
+  color: #121926;
+  font-family: "Manrope", sans-serif;
+  /* Add more styles as needed */
+}

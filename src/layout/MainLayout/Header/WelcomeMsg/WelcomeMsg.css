@@ -1,0 +1,37 @@
+.welcome-text{
+  font-family: "Manrope", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 28px;
+    line-height: 10px;
+    color: #8D8D8D;
+}
+
+.welcome-name{
+  line-height: 10px;
+  .text-black {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
+}
+}
+
+.welcome-container{
+  display: flex;
+  flex-direction: row;
+}
+
+.welcome-outer-container{
+  display: flex;
+  flex-direction: column;
+  margin-left: 45px;
+}
+
+.welcome-sub-text {
+  font-family: "Manrope", sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 22px;
+  color: #8D8D8D;
+  margin: 0;
+}

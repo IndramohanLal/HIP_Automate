@@ -1,0 +1,111 @@
+/* common.css */
+.params_continer {
+    overflow-y: scroll;
+    min-height: 10vh; /* Set a minimum height, adjust as needed */
+    max-height: 30vh; /* Set the maximum height */
+}
+.key_value_table{
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .key_value_table th{
+    border: 1px solid #ddd; /* Add your preferred border color here */
+    font-size: small;
+    text-align: left;
+    padding: 5px;
+  }
+  .key_value_table td {
+    border: 1px solid #ddd; /* Add your preferred border color here */
+  
+    text-align: left;
+  }
+  
+  .key_value_table th {
+    background-color: #f2f2f2; /* Add your preferred header background color here */
+  }
+  .checkbox-cell {
+    width: 40px; /* Adjust the width as needed */
+  }
+  .delete_button_row{
+    width: 20px;
+  }
+  .delete_button{
+    border: none;
+    outline: none;
+    border-radius: 5px;
+  }
+
+  .MuiBox-root css-19kzrtu{
+    padding: 0%;
+  }
+  .Key_valeu_inp:focus {
+    outline: 0.5px solid #cfcdcd;
+  }
+  .custom-select {
+    width: 10%;
+    height: 6vh;
+    border-right: none;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    border-radius: 5px 0px 0px 5px;
+    padding-right: 20px; /* Add right padding to create space for the arrow */
+    appearance: none; /* Hide the default arrow in some browsers */
+    background-color: white; /* Set the background color */
+    position: relative; /* Make it a positioned container for the pseudo-element */
+  }
+  
+  .custom-select::after {
+    content: "▼"; /* Unicode for down arrow or replace with an image */
+    font-size: 12px; /* Adjust the size of the arrow */
+    position: absolute;
+    top: 50%;
+    right: 5px; /* Adjust the right position to align with padding */
+    transform: translateY(-50%);
+  }
+  .genrate_button {
+    height: 5vh;
+    width: 22vh;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    background-color:#00cca5 ;
+    color: #fffbfb;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .genrate_button:hover {
+    background-color: #80e8cc;
+  }
+ 
+  .radio_button {
+    accent-color: #00cca5;
+    border: 1px solid #00cca5;
+  }
+  
+  .radio_button:checked {
+    border: none;
+  }
+
+  /* YourComponent.css */
+
+.glowOnHover {
+  position: relative;
+}
+
+.glowOnHover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: transparent;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.glowOnHover:hover::before {
+  background-color: #00cca5;
+}
