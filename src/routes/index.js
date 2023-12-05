@@ -17,12 +17,16 @@ const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialI
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 const AuthLogin3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login3')));
 const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register3')));
+import TestSideBarButton from 'views/sample-page/Components/TestSidebarButton';
+import ResponseSidebar from 'views/sample-page/Components/ResponseSidebar';
+import GenerateTestScript from 'views/sample-page/Components/GenerateTestScript';
+import GeneratePdfScript from 'views/sample-page/Components/GeneratePdfSScript';
 // ==============================|| ROUTING RENDER ||============================== //
 
 
 export default function ThemeRoutes() {
   const isAuth = localStorage.getItem("isLoggedIn")
-  
+
   return useRoutes([
     {
       path: '/',
@@ -31,6 +35,10 @@ export default function ThemeRoutes() {
         { path: 'dashboard/default', element: <Dashboard /> },
         { path: 'sample-page', element: <SamplePage /> },
         { path: '', element: <Dashboard /> },
+        { path: "/test-code", element: <TestSideBarButton /> },
+        { path: "/response", element: <ResponseSidebar /> },
+        { path: "/generate-script", element: <GenerateTestScript /> },
+        { path: "/generate-pdf-script", element: <GeneratePdfScript /> },
       ],
     },
     { path: 'login', element: <Login /> },
