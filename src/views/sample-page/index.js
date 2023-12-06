@@ -160,6 +160,7 @@ const SamplePage = () => {
       setForceRerender((prev) => !prev);
       setValue(4);
       seTestResultsLists({ ...resp.data.result });
+      localStorage.setItem("myData", resp.data.code_content);
       setDisplaySummary(true);
 
       console.log(resp);

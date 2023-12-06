@@ -15,7 +15,7 @@ const other = {
       id: 'responses',
       title: 'Responses',
       type: 'item',
-      url: "",
+      url: "/response",
       icon: IconArrowsMoveVertical,
       breadcrumbs: false
     },
@@ -23,7 +23,7 @@ const other = {
       id: 'tests',
       title: 'Tests',
       type: 'item',
-      url: "",
+      url: "/test-code",
       icon: IconScan,
       breadcrumbs: false
     },
@@ -43,6 +43,23 @@ const other = {
       icon: IconFileDownload,
       breadcrumbs: false
     },
+    {
+      id: "generate Script using API logs",
+      title: 'Generate script using API logs',
+      type: 'item',
+      url: "/generate-script",
+      icon: IconBook,
+      breadcrumbs: false
+    },
+    {
+      id: "generate Script using API logs",
+      title: 'Generate script using PDF',
+      type: 'item',
+      url: "/generate-pdf-script",
+      icon: IconBook,
+      breadcrumbs: false
+    },
+
 
   ]
 };
