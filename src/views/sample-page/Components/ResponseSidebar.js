@@ -1,14 +1,13 @@
-import {
-    Drawer,
-    Typography,
-} from '@mui/material';
+import React from "react";
+import { Typography } from '@mui/material';
 
 const ResponseSidebar = () => {
     const storedDataString = localStorage.getItem("myData");
-    let parsedData = null;
+    let formattedData = "Invalid JSON format";
 
     try {
-        parsedData = JSON.parse(storedDataString);
+        const parsedData = JSON.parse(storedDataString);
+        formattedData = JSON.stringify(parsedData, null, 2);
     } catch (error) {
         console.error("Error parsing JSON:", error);
     }
@@ -22,7 +21,7 @@ const ResponseSidebar = () => {
                     whiteSpace: 'pre-wrap',
                     wordWrap: 'break-word',
                     padding: '10px',
-                    backgroundColor: '#f5f5f5',
+                    backgroundColor: 'white',
                     borderRadius: '10px',
                     color: '#333',
                     marginLeft: '10px',
@@ -31,7 +30,7 @@ const ResponseSidebar = () => {
                     maxHeight: '80vh',
                 }}
             >
-                {parsedData ? JSON.stringify(parsedData, null, 2) : "Invalid JSON format"}
+                {formattedData}
             </Typography>
         </div>
     );
