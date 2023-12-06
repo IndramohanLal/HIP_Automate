@@ -20,6 +20,7 @@
     "babel-plugin-transform-remove-console": "^6.9.4",
     "formik": "^2.2.9",
     "framer-motion": "^6.5.1",
+    "json-beautify": "^1.1.1",
     "material-ui-popup-state": "^4.0.1",
     "prop-types": "^15.8.1",
     "re-resizable": "^6.9.11",

@@ -160,6 +160,7 @@ const SamplePage = () => {
       setForceRerender((prev) => !prev);
       setValue(4);
       seTestResultsLists({ ...resp.data.result });
+      localStorage.setItem("myData", resp.data.code_content);
       setDisplaySummary(true);
 
       console.log(resp);
@@ -245,7 +246,7 @@ const SamplePage = () => {
         return 'black'; // Default color
     }
   };
-  useEffect(() => {}, [height]);
+  useEffect(() => { }, [height]);
   const openInNewWindow = async () => {
     let resp;
     try {
