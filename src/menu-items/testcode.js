@@ -1,5 +1,5 @@
 // assets
-import { IconBrandChrome, IconHelp ,IconArrowsMoveVertical,IconScan,IconBook,IconFileDownload} from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconArrowsMoveVertical, IconScan, IconBook, IconFileDownload } from '@tabler/icons';
 
 // constant
 const icons = { IconBrandChrome, IconHelp };
@@ -32,14 +32,14 @@ const other = {
       title: 'Generate ReadMe',
       type: 'item',
       url: "",
-      icon:IconBook,
+      icon: IconBook,
       breadcrumbs: false
     },
     {
       id: "download-scripts",
       title: 'Download Scripts',
       type: 'item',
-      url: "",
+      url: "/viewScript",
       icon: IconFileDownload,
       breadcrumbs: false
     },

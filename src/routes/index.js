@@ -9,6 +9,7 @@ import Login from 'views/pages/authentication/authentication3/Login3';
 import { useSelector } from 'react-redux';
 import Dashboard from 'views/dashboard/Default';
 import SamplePage from 'views/sample-page';
+import DataDisplay from 'views/dowloadPDF/downloadPDF'
 import Register from 'views/pages/authentication/authentication3/Register3';
 const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
 const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
@@ -22,7 +23,7 @@ const AuthRegister3 = Loadable(lazy(() => import('views/pages/authentication/aut
 
 export default function ThemeRoutes() {
   const isAuth = localStorage.getItem("isLoggedIn")
-  
+
   return useRoutes([
     {
       path: '/',
@@ -31,6 +32,7 @@ export default function ThemeRoutes() {
         { path: 'dashboard/default', element: <Dashboard /> },
         { path: 'sample-page', element: <SamplePage /> },
         { path: '', element: <Dashboard /> },
+        { path: 'viewScript', element: <DataDisplay /> }
       ],
     },
     { path: 'login', element: <Login /> },

@@ -163,6 +163,7 @@ const SamplePage = () => {
       setDisplaySummary(true);
 
       console.log(resp);
+      localStorage.setItem("myData", resp.data.code_content);
 
       // Success toast
       toast.success('Request sent successfully!', {
@@ -245,7 +246,7 @@ const SamplePage = () => {
         return 'black'; // Default color
     }
   };
-  useEffect(() => {}, [height]);
+  useEffect(() => { }, [height]);
   const openInNewWindow = async () => {
     let resp;
     try {
