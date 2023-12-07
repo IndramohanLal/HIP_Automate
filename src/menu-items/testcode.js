@@ -28,14 +28,6 @@ const other = {
       breadcrumbs: false
     },
     {
-      id: 'generate-readme',
-      title: 'Generate ReadMe',
-      type: 'item',
-      url: "",
-      icon: IconBook,
-      breadcrumbs: false
-    },
-    {
       id: "download-scripts",
       title: 'Download Scripts',
       type: 'item',
@@ -45,17 +37,25 @@ const other = {
     },
     {
       id: "generate Script using API logs",
-      title: 'Generate script using API logs',
+      title: 'Generate Script Using API Logs',
       type: 'item',
       url: "/generate-script",
       icon: IconBook,
       breadcrumbs: false
     },
     {
-      id: "generate Script using API logs",
-      title: 'Generate script using PDF',
+      id: "generate Script using PDF",
+      title: 'Generate Script Using PDF',
       type: 'item',
       url: "/generate-pdf-script",
+      icon: IconBook,
+      breadcrumbs: false
+    },
+    {
+      id: 'generate-readme',
+      title: 'Generate ReadMe',
+      type: 'item',
+      url: "",
       icon: IconBook,
       breadcrumbs: false
     },

@@ -104,6 +104,8 @@ const SamplePage = () => {
   };
   const handleChangeeditor = (newCode) => {
     setCode(newCode);
+    //Indramohan code
+    dispatch(setGenraetedTest(newCode));
 
     // Do other stuff if needed
   };
