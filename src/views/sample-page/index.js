@@ -104,6 +104,8 @@ const SamplePage = () => {
   };
   const handleChangeeditor = (newCode) => {
     setCode(newCode);
+    //Indramohan code
+    dispatch(setGenraetedTest(newCode));
 
     // Do other stuff if needed
   };
@@ -164,6 +166,7 @@ const SamplePage = () => {
       setDisplaySummary(true);
 
       console.log(resp);
+      localStorage.setItem("myData", resp.data.code_content);
 
       // Success toast
       toast.success('Request sent successfully!', {
