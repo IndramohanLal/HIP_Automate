@@ -33,7 +33,7 @@ const GeneratePdfScript = () => {
     };
 
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="xl">
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>

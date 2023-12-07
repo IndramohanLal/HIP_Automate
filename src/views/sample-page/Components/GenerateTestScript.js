@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Paper, Typography, Container, Grid } from "@mui/material";
-import axios from "axios"; // Import Axios library
+import axios from "axios";
 
 const TestScriptGenerator = () => {
     const [generatedScript, setGeneratedScript] = useState("");
@@ -31,7 +31,7 @@ const TestScriptGenerator = () => {
     };
 
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="xl">
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
