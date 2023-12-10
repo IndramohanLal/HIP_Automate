@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import { Typography } from '@mui/material';
+import Editor from '@monaco-editor/react';
 
 const ResponseSidebar = () => {
     const storedDataString = localStorage.getItem("myData");
+    console.log(storedDataString)
     let formattedData = null; // Initialize to null
 
     if (storedDataString !== null) {
@@ -30,28 +32,27 @@ const ResponseSidebar = () => {
     }, []); // The empty dependency array ensures that the effect runs only once
 
     return (
-        <div >
+        <div>
             {formattedData !== null ? (
-                <Typography
-                    sx={{
-                        fontFamily: 'monospace',
-                        fontSize: '14px',
-                        whiteSpace: 'pre-wrap',
-                        wordWrap: 'break-word',
-                        padding: '10px',
-                        backgroundColor: 'white',
-                        borderRadius: '10px',
-                        color: '#333',
-                        marginLeft: '10px',
-                        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                        overflow: 'auto',
-                        maxHeight: '80vh',
-                    }}
-                >
-                    {formattedData}
+                <Typography>
+                    <div className="editor-container" style={{ height: '100vh', width: '100vw', overflowX: 'hidden' }}>
+                        <Editor
+                            width="100%"
+                            height="100%"
+                            defaultLanguage="json"  // Change 'JSON' to 'json'
+                            defaultValue={formattedData}
+                            options={{
+                                formatOnType: true,
+                                formatOnPaste: true,
+                                minimap: {
+                                    enabled: false
+                                }
+                            }}
+                        />
+                    </div>
                 </Typography>
             ) : (
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }} >
+                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
                     <Typography
                         sx={{
                             fontFamily: 'monospace',
