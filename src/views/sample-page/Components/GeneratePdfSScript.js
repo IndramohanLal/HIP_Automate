@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button, Paper, Typography, Container } from "@mui/material";
-import axios from "axios"; // Import Axios library
+import { Button, Paper, Typography, Container, Grid } from "@mui/material";
+import axios from "axios";
 
 const GeneratePdfScript = () => {
     const [generatedScript, setGeneratedScript] = useState("");
@@ -33,46 +33,49 @@ const GeneratePdfScript = () => {
     };
 
     return (
-        <Container maxWidth="md">
-            <Paper elevation={3} style={{ padding: "20px", marginTop: "20px", marginLeft: "-180px", marginRight: "-100px" }}>
-                <Typography
-                    variant="h5"
-                    component="div"
-                    style={{
-                        marginBottom: "20px",
-                        borderBottom: "2px solid #3f51b5",
-                        paddingBottom: "10px",
-                        fontFamily: 'Arial, Helvetica, sans-serif', // Change font family
-                        fontWeight: 'bold', // Set font weight to bold
-                        color: 'black', // Change text color to a dark pink
-                        textAlign: 'left', // Center the text
-                        letterSpacing: '0.5px', // Add letter spacing
-                    }}
-                >
-                    Test Script Generator
-                </Typography>
+        <Container maxWidth="xl">
+            <Grid container spacing={3}>
+                <Grid item xs={12}>
+                    <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+                        <Typography
+                            variant="h5"
+                            component="div"
+                            style={{
+                                marginBottom: "20px",
+                                borderBottom: "2px solid #3f51b5",
+                                paddingBottom: "10px",
+                                fontFamily: 'Arial, Helvetica, sans-serif',
+                                fontWeight: 'bold',
+                                color: 'black',
+                                textAlign: 'left',
+                                letterSpacing: '0.5px',
+                            }}
+                        >
+                            Test Script Generator
+                        </Typography>
 
-
-                <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    style={{ marginBottom: "10px" }}
-                />
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleHitTestScript}
-                        style={{ marginTop: "10px", height: "40px" }}
-                    >
-                        Generate Test Script
-                    </Button>
-                    <h2 style={{ marginTop: "10px" }}>{responseText}</h2>
-                </div>
-            </Paper>
+                        <input
+                            type="file"
+                            accept=".pdf"
+                            onChange={handleFileChange}
+                            style={{ marginBottom: "10px" }}
+                        />
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleHitTestScript}
+                                style={{ marginTop: "10px", height: "40px" }}
+                            >
+                                Generate Test Script
+                            </Button>
+                            <Typography style={{ marginTop: "10px" }}>{responseText}</Typography>
+                        </div>
+                    </Paper>
+                </Grid>
+            </Grid>
         </Container>
     )
-
 }
-export default GeneratePdfScript
+
+export default GeneratePdfScript;

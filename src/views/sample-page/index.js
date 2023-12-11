@@ -112,12 +112,9 @@ const SamplePage = () => {
 
     setCode(modifiedCode);
     dispatch(setGenraetedTest(modifiedCode));
-
-    // console.log(newCode)
-    // setCode(newCode);
-    // dispatch(setGenraetedTest(code));
-    // console.log("*************")
-    // console.log(code)
+    setCode(newCode);
+    //Indramohan code
+    dispatch(setGenraetedTest(newCode));
 
     // Do other stuff if needed
   };
@@ -194,6 +191,7 @@ const SamplePage = () => {
       setDisplaySummary(true);
 
       console.log(resp);
+      localStorage.setItem("myData", resp.data.code_content);
 
       // Success toast
       toast.success('Request sent successfully!', {
