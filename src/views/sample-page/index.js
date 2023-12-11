@@ -14,6 +14,7 @@ import { Resizable } from 're-resizable';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setGenraetedTest } from 'store/postman';
+import {setResponseData} from 'store/postman'
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
 import MainCard from 'ui-component/cards/MainCard';
@@ -77,10 +78,12 @@ const SamplePage = () => {
 
   const bodydata = useSelector((state) => state.automation.bodyContent);
   const contentType = useSelector((state) => state.automation.bodyContentType);
+  // const res=useSelector((state)=>state.automation.responseData)
   const headerData = useSelector((state) => state.automation.headerData);
   const paramsdata = useSelector((state) => state.automation.paramsdata);
   const authorization = useSelector((state) => state.automation.authToken);
   const test_code = useSelector((state) => state.automation.genratedTest);
+  
   const [testResults, seTestResults] = useState(null);
   const [testResultsLists, seTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
   const [height, setHeight] = useState('40vh');
@@ -90,8 +93,9 @@ const SamplePage = () => {
   const [isHovered, setHovered] = useState(false);
   const [forceRerender, setForceRerender] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-
+  const [res,setRes] = useState('');
   const [code, setCode] = useState(test_code);
+  const [originalCode, setOriginalCode] = useState(test_code);
   const handleMouseEnter = () => {
     setHovered(true);
   };
@@ -103,6 +107,11 @@ const SamplePage = () => {
     setValue(newValue);
   };
   const handleChangeeditor = (newCode) => {
+
+    const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
+
+    setCode(modifiedCode);
+    dispatch(setGenraetedTest(modifiedCode));
     setCode(newCode);
     //Indramohan code
     dispatch(setGenraetedTest(newCode));
@@ -111,6 +120,18 @@ const SamplePage = () => {
   };
   const dispatch = useDispatch();
   const handleSend = async () => {
+    
+    if (code !== originalCode) {
+      // The code has been modified
+      const confirm = window.confirm("Previous script data we be lost. Are you sure you want to send the request?");
+      if (!confirm) {
+        return; // Do nothing if the user cancels the operation
+      }
+      else{
+        dispatch(setGenraetedTest(""));
+      }
+    }
+
     if (url.trim().length === 0) {
       return;
     }
@@ -156,13 +177,17 @@ const SamplePage = () => {
       });
 
       dispatch(setGenraetedTest(resp.data.test_code));
+
       setCode(resp.data.test_code);
       setResponseBody(resp.data.code_content);
+      console.log(resp.data.code_content)
+      localStorage.setItem("myData", resp.data.code_content);
+      dispatch(setResponseData(resp.data.code_content))
+      // setRes(useSelector((state)=>state.automation.responseData))
       setLoadingOverlay(false);
       setForceRerender((prev) => !prev);
       setValue(4);
       seTestResultsLists({ ...resp.data.result });
-      localStorage.setItem("myData", resp.data.code_content);
       setDisplaySummary(true);
 
       console.log(resp);
@@ -198,6 +223,36 @@ const SamplePage = () => {
     }
   };
 
+  const r=useSelector((state)=>state.automation.responseData)
+  localStorage.setItem("res", r);
+  let re=localStorage.getItem("res")
+
+ if (re !== null) {
+  try {
+    const parsedData = JSON.parse(re);
+    re = JSON.stringify(parsedData, null,  2);
+  } catch (error) {
+      console.error("Error parsing JSON:", error);
+  }
+}
+  useEffect(() => {
+      localStorage.removeItem("res");
+
+  }, []);
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+        // Clear the data from local storage
+        localStorage.removeItem("myData");
+    };
+
+    // Attach the event listener
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+}, []); 
   const handleConfirmation = (confirm) => {
     setShowConfirmation(false);
 
@@ -249,6 +304,7 @@ const SamplePage = () => {
         return 'black'; // Default color
     }
   };
+  // const resData = useSelector((state) => state.automation.responseData); 
   useEffect(() => { }, [height]);
   const openInNewWindow = async () => {
     let resp;
@@ -406,14 +462,28 @@ const SamplePage = () => {
                 placeholder="Enter raw data"
               ></textarea> */}
               <div className="editor-container" style={{ overflowX: 'hidden' }}>
-                <Editor
-                  key={forceRerender}
-                  height={height}
-                  width="100%"
-                  defaultLanguage="python"
-                  defaultValue={code}
-                  onChange={handleChangeeditor}
-                />
+              <Editor
+                key={forceRerender}
+                height={height}
+                width="100%"
+                defaultLanguage="python"
+                defaultValue={code}
+                options={{
+                formatOnType: true,
+                formatOnPaste: true,
+                minimap: {
+                  enabled: false              
+                },
+                // Additional editor options
+                language: {
+                  comments: {
+                   lineComment: '#',  // Adjust this line based on your language
+                  },
+                },
+                }}
+                onChange={handleChangeeditor}
+              />
+
               </div>{' '}
             </CustomTabPanel>
           </Box>
@@ -435,7 +505,7 @@ const SamplePage = () => {
           >
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs value={value1} onChange={handleChange1} aria-label="basic tabs example">
-                <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps1(0)} />
+                <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Response" {...a11yProps1(0)} />
                 <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Header" {...a11yProps1(1)} />
                 <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Test Results" {...a11yProps1(2)} />
               </Tabs>
@@ -445,12 +515,13 @@ const SamplePage = () => {
             {/* )} */}
             <CustomTabPanel value={value1} index={0}>
               {!loadingOverlay && (
+                
                 <Editor
                   key={forceRerender}
-                  height="10vh"
+                  height="50vh"
                   width="100%"
                   defaultLanguage="JSON"
-                  defaultValue={responseBody}
+                  defaultValue={re}
                   options={{
                     formatOnType: true,
                     formatOnPaste: true,
@@ -459,6 +530,7 @@ const SamplePage = () => {
                     }
                   }}
                 />
+            
               )}
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={1}>

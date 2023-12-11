@@ -52,6 +52,14 @@ const other = {
       breadcrumbs: false
     },
     {
+      id: "upload Script",
+      title: 'Upload Script',
+      type: 'item',
+      url: "/upload-script",
+      icon: IconBook,
+      breadcrumbs: false
+    },
+    {
       id: 'generate-readme',
       title: 'Generate ReadMe',
       type: 'item',

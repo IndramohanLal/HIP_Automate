@@ -22,6 +22,7 @@ import TestSideBarButton from 'views/sample-page/Components/TestSidebarButton';
 import ResponseSidebar from 'views/sample-page/Components/ResponseSidebar';
 import GenerateTestScript from 'views/sample-page/Components/GenerateTestScript';
 import GeneratePdfScript from 'views/sample-page/Components/GeneratePdfSScript';
+import UploadScriptSlidebar from 'views/sample-page/Components/UploadScriptSlidebar';
 // ==============================|| ROUTING RENDER ||============================== //
 
 
@@ -41,6 +42,8 @@ export default function ThemeRoutes() {
         { path: "/response", element: <ResponseSidebar /> },
         { path: "/generate-script", element: <GenerateTestScript /> },
         { path: "/generate-pdf-script", element: <GeneratePdfScript /> },
+        { path: "/upload-script", element: <UploadScriptSlidebar /> },
+        
       ],
     },
     { path: 'login', element: <Login /> },
