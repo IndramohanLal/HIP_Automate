@@ -8,6 +8,10 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import Editor from '@monaco-editor/react';
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import MainCard from 'ui-component/cards/MainCard';
+import { ToastContainer, toast } from 'react-toastify';
 
 const DataDisplay = () => {
     const pythonCode = useSelector((state) => state.automation.genratedTest);
@@ -34,20 +38,25 @@ const DataDisplay = () => {
     };
 
     return (
-        <Paper style={{ textAlign: "right", padding: '20px', margin: '20px', display: 'flex', justifyContent: 'flex-start' }}>
-            <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <Button variant="contained" color="primary" onClick={downloadAsPDF}>
-                        Download as PDF
-                    </Button>
-                </Grid>
-                <Grid item xs={12}>
-                    <div className="editor-container" style={{ height: '100vh', width: '100vw', overflowX: 'hidden' }}>
-                        <Editor width="100%" height="80%" defaultLanguage="python" defaultValue={pythonCode} />
-                    </div>
-                </Grid>
-            </Grid>
-        </Paper>
+        <MainCard style={{ position: 'relative' }}>
+            <ToastContainer></ToastContainer>
+            <Container maxWidth="xl">
+                <Paper style={{ padding: '5px', margin: '20px' }}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                            <Button variant="contained" color="primary" onClick={downloadAsPDF} sx={{ marginLeft: 'auto' }}>
+                                Download as PDF
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Box className="editor-container" sx={{ height: '70vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
+                                <Editor width="100%" height="100%" defaultLanguage="python" defaultValue={pythonCode} />
+                            </Box>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </Container>
+        </MainCard>
     );
 };
 

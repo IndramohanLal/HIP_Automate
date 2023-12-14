@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { Resizable } from 're-resizable';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGenraetedTest } from 'store/postman';
+import { setGenraetedTest, setTestUrl } from 'store/postman';
 import {setResponseData} from 'store/postman'
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
@@ -100,6 +100,9 @@ const SamplePage = () => {
   const [originalCode, setOriginalCode] = useState(test_code);
   const [addFaultyTestCasesClicked, setAddFaultyTestCasesClicked] = useState(false);
   const [showFaultyTestTab,setShowFaultyTestTab]=useState(false);
+  const [isRequestEditable, setIsRequestEditable] = useState(true);//  Indra
+  const storedUrl = useSelector((state) => state.automation.url);
+  const [enableRequestDropdown, setEnableRequestDropdown] = useState(true);
   const showFaultyTC=()=>{
     setShowFaultyTestTab(true)
   }
@@ -145,6 +148,7 @@ const SamplePage = () => {
   // }
 
   const handleSend = async () => {
+    dispatch(setTestUrl(url));
     console.log(code)
     console.log(originalCode)
     if (code !== originalCode) {
@@ -208,6 +212,7 @@ const SamplePage = () => {
       });
 
       dispatch(setGenraetedTest(resp.data.test_code));
+      setIsRequestEditable(false);//Indra
 
       setCode(resp.data.test_code);
       setResponseBody(resp.data.code_content);
@@ -311,10 +316,14 @@ const SamplePage = () => {
   };
   const handleUrlChange = (event) => {
     const newUrl = event.target.value;
+    setIsRequestEditable(true);
     // Regular expression for URL validatio
 
     setUrl(newUrl); // Update the input field
     setValidUrl(newUrl.startsWith('https://') || newUrl.startsWith('http://')); // Check if the new URL is valid
+
+    const isUrlChanged = newUrl.trim() !== storedUrl.trim();
+    setEnableRequestDropdown(isUrlChanged);
   };
   const handleChange1 = (event, newValue) => {
     setValue1(newValue);
@@ -361,6 +370,7 @@ const SamplePage = () => {
         <select
           value={requestType}
           onChange={handleChangeType}
+          disabled={!enableRequestDropdown}//Indra
           style={{
             width: '10%',
             height: '6vh',
@@ -396,6 +406,7 @@ const SamplePage = () => {
           value={url}
           onChange={handleUrlChange}
           placeholder="Enter Url"
+          // disabled={!isRequestEditable}//Indra
           style={{
             width: '76%',
             height: '6vh',
