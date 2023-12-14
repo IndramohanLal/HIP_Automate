@@ -83,7 +83,9 @@ const SamplePage = () => {
   const paramsdata = useSelector((state) => state.automation.paramsdata);
   const authorization = useSelector((state) => state.automation.authToken);
   const test_code = useSelector((state) => state.automation.genratedTest);
-  
+  console.log("$$$$$$$$$$$$$$$")
+  console.log(test_code)
+  const dispatch = useDispatch();
   const [testResults, seTestResults] = useState(null);
   const [testResultsLists, seTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
   const [height, setHeight] = useState('40vh');
@@ -96,6 +98,22 @@ const SamplePage = () => {
   const [res,setRes] = useState('');
   const [code, setCode] = useState(test_code);
   const [originalCode, setOriginalCode] = useState(test_code);
+  const [addFaultyTestCasesClicked, setAddFaultyTestCasesClicked] = useState(false);
+  const [showFaultyTestTab,setShowFaultyTestTab]=useState(false);
+  const showFaultyTC=()=>{
+    setShowFaultyTestTab(true)
+  }
+
+  const handleAddFaultyTestCasesClick = async () => {
+    try {
+      const response = await axios.get('YOUR_API_ENDPOINT');
+      setRes(response.data);
+    } catch (error) {
+      console.error('Error making the request:', error);
+    }
+    setAddFaultyTestCasesClicked(true);
+  };
+  
   const handleMouseEnter = () => {
     setHovered(true);
   };
@@ -111,27 +129,40 @@ const SamplePage = () => {
     const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
 
     setCode(modifiedCode);
-    dispatch(setGenraetedTest(modifiedCode));
-    setCode(newCode);
+    // dispatch(setGenraetedTest(modifiedCode));
+    // setCode(newCode);
     //Indramohan code
     dispatch(setGenraetedTest(newCode));
 
-    // Do other stuff if needed
   };
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setOriginalCode(test_code);
+  }, [code]);
+
+  // sendReq=()=>{
+  //   // return <h1>4f3</h1>
+  // }
+
   const handleSend = async () => {
-    
+    console.log(code)
+    console.log(originalCode)
     if (code !== originalCode) {
-      // The code has been modified
-      const confirm = window.confirm("Previous script data we be lost. Are you sure you want to send the request?");
-      if (!confirm) {
-        return; // Do nothing if the user cancels the operation
-      }
-      else{
-        dispatch(setGenraetedTest(""));
+      const confirm = window.confirm("Previous script data will be lost. Are you sure you want to send the request?");
+      if (confirm) {
+        dispatch(setGenraetedTest('')); 
+        setCode(''); 
+        setOriginalCode(''); 
+      } else {
+        // User canceled the action
+        return;
       }
     }
-
+  
+    // The rest of your existing code here...
+  
+    // Additional steps to execute when code !== originalCode
+ 
     if (url.trim().length === 0) {
       return;
     }
@@ -322,7 +353,7 @@ const SamplePage = () => {
       alert('Your browser blocked the pop-up window. Please allow pop-ups for this site.');
     }
   };
-
+  const [showCombinedInput, setShowCombinedInput] = useState(false);
   return (
     <MainCard style={{ position: 'relative' }}>
       <ToastContainer></ToastContainer>
@@ -422,14 +453,61 @@ const SamplePage = () => {
             }}
           >
             <Box sx={{ marginLeft: '0.7%', borderBottom: 1, borderColor: 'divider', padding: '10', width: '97%' }}>
-              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Params" {...a11yProps(0)} />
-                <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Authorization" {...a11yProps(1)} />
-                <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Headers" {...a11yProps(2)} />
-                <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)} />
-                <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(3)} />
-              </Tabs>
-            </Box>
+            <Tabs value={value} onChange={(event, newValue) => handleChange(event, newValue)} aria-label="basic tabs example">
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Params" {...a11yProps(0)}   onClick={() => setShowFaultyTestTab(false)} />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Authorization" {...a11yProps(1)}    onClick={() => setShowFaultyTestTab(false)}/>
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Headers" {...a11yProps(2)}   onClick={() => setShowFaultyTestTab(false)} />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)}   onClick={() => setShowFaultyTestTab(false)}  />
+          <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)}  onClick={showFaultyTC}   />
+          
+          { showFaultyTestTab && (
+           <Button
+           sx={{
+             padding: '2vh',
+             paddingLeft:"2vh",
+             fontSize: '11px',
+             marginLeft: '86.4vh',
+             marginTop:"1vh",
+             width: '11%',
+             height: '4vh',
+             borderRadius: '5px',
+             boxSizing: 'border-box',
+             variant: "contained",
+             backgroundColor: '#00cca5',
+             color: '#000',  // Set the text color to black
+             '&:hover': {
+               backgroundColor: '#80e8cc', // Change the color on hover
+             }
+           }}
+           label="Add Faulty Test Cases"
+           {...a11yProps(5)}
+           onClick={handleAddFaultyTestCasesClick}
+         >
+           Add Faulty Test Cases
+         </Button>
+          )         
+              }
+
+          {/* <Button
+          sx={{
+            width: '10%',
+            backgroundColor: '#00cca5',
+            height: '6vh',
+            borderRadius: '5px',
+            boxSizing: 'border-box',
+            marginLeft: '2vh',
+            '&:hover': {
+              backgroundColor: '#80e8cc' // Change the color on hover
+            }
+          }}
+          variant="contained"
+          onClick={handleSend}
+        >
+          Send
+        </Button> */}
+
+          </Tabs>
+              </Box>
             <CustomTabPanel sx={{ padding: '0px' }} value={value} index={0}>
               <KeyValueTable
                 setUrl={setUrl}
@@ -486,6 +564,23 @@ const SamplePage = () => {
 
               </div>{' '}
             </CustomTabPanel>
+            <CustomTabPanel value={value} index={5}>
+                {addFaultyTestCasesClicked && (
+                  <Editor
+                    height="50vh"
+                    width="100%"
+                    defaultLanguage="json"
+                    defaultValue={res}
+                    options={{
+                      formatOnType: true,
+                      formatOnPaste: true,
+                      minimap: {
+                        enabled: false
+                      }
+                    }}
+                  />
+                )}
+              </CustomTabPanel>
           </Box>
         </ThemeProvider>
       </Resizable>
@@ -515,12 +610,12 @@ const SamplePage = () => {
             {/* )} */}
             <CustomTabPanel value={value1} index={0}>
               {!loadingOverlay && (
-                
+                <div className="editor-container">
                 <Editor
                   key={forceRerender}
                   height="50vh"
                   width="100%"
-                  defaultLanguage="JSON"
+                  defaultLanguage="json"
                   defaultValue={re}
                   options={{
                     formatOnType: true,
@@ -530,6 +625,7 @@ const SamplePage = () => {
                     }
                   }}
                 />
+                </div> 
             
               )}
             </CustomTabPanel>
