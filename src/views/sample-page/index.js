@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { Resizable } from 're-resizable';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGenraetedTest, setTestUrl } from 'store/postman';
+import { setGenraetedTest, setIsLoggedIn, setTestUrl } from 'store/postman';
 import {setResponseData} from 'store/postman'
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
@@ -103,6 +103,7 @@ const SamplePage = () => {
   const [isRequestEditable, setIsRequestEditable] = useState(true);//  Indra
   const storedUrl = useSelector((state) => state.automation.url);
   const [enableRequestDropdown, setEnableRequestDropdown] = useState(true);
+  // const [ischanged, setIsChanged] = useState
   const showFaultyTC=()=>{
     setShowFaultyTestTab(true)
   }
@@ -135,6 +136,7 @@ const SamplePage = () => {
     // dispatch(setGenraetedTest(modifiedCode));
     // setCode(newCode);
     //Indramohan code
+    // setOriginalCode(modifiedCode)
     dispatch(setGenraetedTest(newCode));
 
   };
@@ -148,10 +150,11 @@ const SamplePage = () => {
   // }
 
   const handleSend = async () => {
+    
     dispatch(setTestUrl(url));
     console.log(code)
     console.log(originalCode)
-    if (code !== originalCode) {
+    if (code !== test_code) {
       const confirm = window.confirm("Previous script data will be lost. Are you sure you want to send the request?");
       if (confirm) {
         dispatch(setGenraetedTest('')); 
@@ -162,10 +165,6 @@ const SamplePage = () => {
         return;
       }
     }
-  
-    // The rest of your existing code here...
-  
-    // Additional steps to execute when code !== originalCode
  
     if (url.trim().length === 0) {
       return;
@@ -471,51 +470,32 @@ const SamplePage = () => {
             <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)}   onClick={() => setShowFaultyTestTab(false)}  />
           <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)}  onClick={showFaultyTC}   />
           
-          { showFaultyTestTab && (
-           <Button
-           sx={{
-             padding: '2vh',
-             paddingLeft:"2vh",
-             fontSize: '11px',
-             marginLeft: '86.4vh',
-             marginTop:"1vh",
-             width: '11%',
-             height: '4vh',
-             borderRadius: '5px',
-             boxSizing: 'border-box',
-             variant: "contained",
-             backgroundColor: '#00cca5',
-             color: '#000',  // Set the text color to black
-             '&:hover': {
-               backgroundColor: '#80e8cc', // Change the color on hover
-             }
-           }}
-           label="Add Faulty Test Cases"
-           {...a11yProps(5)}
-           onClick={handleAddFaultyTestCasesClick}
-         >
-           Add Faulty Test Cases
-         </Button>
-          )         
-              }
-
-          {/* <Button
-          sx={{
-            width: '10%',
-            backgroundColor: '#00cca5',
-            height: '6vh',
-            borderRadius: '5px',
-            boxSizing: 'border-box',
-            marginLeft: '2vh',
-            '&:hover': {
-              backgroundColor: '#80e8cc' // Change the color on hover
-            }
-          }}
-          variant="contained"
-          onClick={handleSend}
-        >
-          Send
-        </Button> */}
+          {showFaultyTestTab && ( 
+             <Button
+  sx={{
+    padding: '3vh',
+    paddingLeft: '2vh',
+    fontSize: '11px',
+    marginLeft: '40vh',
+    marginTop: '2vh',
+    marginBottom:'1vh',
+    width: '18%',
+    height: '4vh',
+    borderRadius: '6px',
+    boxSizing: 'border-box',
+    variant: 'contained',
+    backgroundColor: '#00cca5',
+    color: '#000', 
+    '&:hover': {
+      backgroundColor: '#80e8cc',
+    },
+  }}
+  label="Add Faulty Test Cases"
+  {...a11yProps(5)}
+  onClick={handleAddFaultyTestCasesClick}
+>
+  Add Faulty Test Cases
+</Button>)}
 
           </Tabs>
               </Box>
