@@ -3,12 +3,12 @@
     font-style: normal;
     font-weight: normal;
     font-size: 28px;
-    line-height: 10px;
+    line-height: 30px;
     color: #8D8D8D;
 }
 
 .welcome-name{
-  line-height: 10px;
+  line-height: 30px;
   .text-black {
     --bs-text-opacity: 1;
     color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
@@ -31,7 +31,24 @@
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
-  line-height: 22px;
+  line-height: 0px;
   color: #8D8D8D;
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .welcome-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .welcome-text,
+  .welcome-name {
+    margin-bottom: 8px;
+  }
+
+  .welcome-outer-container {
+    margin-left: 0;
+  }
 }

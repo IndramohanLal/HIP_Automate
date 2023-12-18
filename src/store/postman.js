@@ -16,6 +16,7 @@ const AutomationSlice = createSlice({
       binary: null
     },
     genratedTest: '',
+    javascriptcode:'',
     url: '',
     isLoggedin:false,
     responseData:"",
@@ -44,6 +45,9 @@ const AutomationSlice = createSlice({
     setTestUrl: (state, action) => {
       state.url = action.payload;
     },
+    setJavascriptCode: (state, action) => {
+      state.javascriptcode = action.payload;
+    },
     setIsLoggedIn:(state,action)=>{
       state.isLoggedin = action.payload
     },
@@ -56,7 +60,7 @@ const AutomationSlice = createSlice({
   }
 });
 
-export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl ,setIsLoggedIn,setResponseData} = AutomationSlice.actions;
+export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl , setJavascriptCode, setIsLoggedIn,setResponseData} = AutomationSlice.actions;
 export const selectParamsData = (state) => state.Automation.paramsdata;
 
 export default AutomationSlice.reducer;

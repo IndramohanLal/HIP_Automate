@@ -13,7 +13,7 @@ const TestResults = ({ testResultsLists }) => {
     summary: ''
   });
   useEffect(() => {
-    setTestResults({ ...testResultsLists });
+        setTestResults({ ...testResultsLists });
     if (testResults.summary != '') {
       setresponseRecived(true)
     }

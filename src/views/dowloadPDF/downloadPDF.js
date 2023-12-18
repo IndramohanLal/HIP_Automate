@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -18,7 +18,7 @@ const DataDisplay = () => {
 
     const downloadAsPDF = () => {
         if (!pythonCode) {
-            alert('No Python code available for download.');
+            toast.error('No Python code available for download.');
             return;
         }
 
@@ -38,25 +38,44 @@ const DataDisplay = () => {
     };
 
     return (
-        <MainCard style={{ position: 'relative' }}>
+        <>
             <ToastContainer></ToastContainer>
             <Container maxWidth="xl">
-                <Paper style={{ padding: '5px', margin: '20px' }}>
+                <Paper style={{ padding: '5px', margin: '0px' }}>
                     <Grid container spacing={2}>
+                        {pythonCode && (
+                            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                                <Button variant="contained" onClick={downloadAsPDF} 
+                                 sx={{
+                                    width: 'auto',
+                                    backgroundColor: '#00cca5',
+                                    height: '6vh',
+                                    borderRadius: '5px',
+                                    boxSizing: 'border-box',
+                                    marginLeft: '2vh',
+                                    '&:hover': {
+                                        backgroundColor: '#80e8cc'
+                                    }
+                                    }}>
+                                    Download as PDF
+                                </Button>
+                            </Grid>
+                        )}
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-                            <Button variant="contained" color="primary" onClick={downloadAsPDF} sx={{ marginLeft: 'auto' }}>
-                                Download as PDF
-                            </Button>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Box className="editor-container" sx={{ height: '70vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
-                                <Editor width="100%" height="100%" defaultLanguage="python" defaultValue={pythonCode} />
-                            </Box>
+                            {pythonCode ? (
+                                <Box className="editor-container" sx={{ height: '70vh', width: '100%', maxWidth: '100%', overflowX: 'hidden' }}>
+                                    <Editor width="100%" height="100%" defaultLanguage="python" defaultValue={pythonCode} />
+                                </Box>
+                            ) : (
+                                <Typography variant="body1" color="textSecondary" align="center">
+                                    Nothing to download.
+                                </Typography>
+                            )}
                         </Grid>
                     </Grid>
                 </Paper>
             </Container>
-        </MainCard>
+        </>
     );
 };
 

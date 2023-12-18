@@ -1,78 +1,110 @@
-import React, { useState } from "react";
-import { Button, Paper, Typography, Container } from "@mui/material";
-import axios from "axios"; // Import Axios library
+import React, { useState, useEffect } from "react";
+import { Button, Paper, Typography, Container, Grid, CircularProgress } from "@mui/material";
+import axios from "axios";
+import TestResults from './TestResults';
+
+const baseUrl = `${process.env.REACT_APP_AUTOMATE}`;
 
 const GeneratePdfScript = () => {
-    const [generatedScript, setGeneratedScript] = useState("");
-    const [responseText, setResponseText] = useState("");
+    const [pdfFile, setPdfFile] = useState(null);
+    const [testResultsLists, setTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
+    const [loading, setLoading] = useState(false);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        if (file && file.type === "application/pdf") {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const pdfData = e.target.result;
-                setGeneratedScript(pdfData);
-            };
-            reader.readAsText(file);
-            setResponseText("");  // Reset responseText when a new file is selected
-        } else {
-            setGeneratedScript("");
-            setResponseText("");
-            alert("Please select a valid PDF file.");
-        }
+        setPdfFile(file);
     };
 
     const handleHitTestScript = async () => {
         try {
-            const response = await axios.get("https://reqres.in/api/users?page=2");
-            setResponseText(JSON.stringify(response.data, null, 2));
+            if (!pdfFile) {
+                alert("Please select a PDF file.");
+                return;
+            }
+            setLoading(true);
+            const formData = new FormData();
+            formData.append("file", pdfFile);
+
+            const response = await axios.post(`${baseUrl}/upload_test_script`, formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                });
+            const responseData = response.data;
+            // console.log(responseData)
+            setTestResultsLists({ ...responseData });
+            setResponseText(JSON.stringify(responseData, null, 2));
+            setForceRerender((prev) => !prev);
         } catch (error) {
             setResponseText(`Error: ${error.message}`);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <Container maxWidth="md">
-            <Paper elevation={3} style={{ padding: "20px", marginTop: "20px", marginLeft: "-180px", marginRight: "-100px" }}>
-                <Typography
-                    variant="h5"
-                    component="div"
-                    style={{
-                        marginBottom: "20px",
-                        borderBottom: "2px solid #3f51b5",
-                        paddingBottom: "10px",
-                        fontFamily: 'Arial, Helvetica, sans-serif', // Change font family
-                        fontWeight: 'bold', // Set font weight to bold
-                        color: 'black', // Change text color to a dark pink
-                        textAlign: 'left', // Center the text
-                        letterSpacing: '0.5px', // Add letter spacing
-                    }}
-                >
-                    Test Script Generator
-                </Typography>
-
-
+        <Container maxWidth="xl">
+          <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+            <Typography
+              variant="h5"
+              component="div"
+              style={{
+                marginBottom: "20px",
+                borderBottom: "2px solid #ccc",
+                paddingBottom: "10px",
+              }}
+            >
+              Run Your Script
+            </Typography>
+    
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
                 <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    style={{ marginBottom: "10px" }}
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  style={{ width: "100%" }}
                 />
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleHitTestScript}
-                        style={{ marginTop: "10px", height: "40px" }}
-                    >
-                       Upload Script
-                    </Button>
-                    <h2 style={{ marginTop: "10px" }}>{responseText}</h2>
-                </div>
-            </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  sx={{
+                    width: { xs: "80%", md: "15%" },
+                    backgroundColor: "#00cca5",
+                    height: { xs: "6vh", md: "40px" },
+                    borderRadius: "5px",
+                    boxSizing: "border-box",
+                    marginLeft: { xs: "auto", md: "0vh" },
+                    "&:hover": {
+                      backgroundColor: "#80e8cc",
+                    },
+                  }}
+                  variant="contained"
+                  onClick={handleHitTestScript}
+                  style={{ marginTop: "10px" }}
+                  disabled={loading}
+                >
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Run Script'}
+                </Button>
+              </Grid>
+            </Grid>
+    
+            <Grid container spacing={2} style={{ marginTop: "20px" }}>
+              {testResultsLists &&
+                testResultsLists.success_tests.length +
+                  testResultsLists.failed_tests.length > 0 && (
+                  <Grid item xs={12}>
+                    <TestResults
+                      key={testResultsLists.timestamp}
+                      testResultsLists={testResultsLists}
+                    />
+                  </Grid>
+                )}
+            </Grid>
+          </Paper>
         </Container>
-    )
+      );
+    };
 
-}
-export default GeneratePdfScript
+export default GeneratePdfScript;
