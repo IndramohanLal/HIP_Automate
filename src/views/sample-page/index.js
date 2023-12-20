@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { Resizable } from 're-resizable';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGenraetedTest, setTestUrl } from 'store/postman';
+import { setGenraetedTest, setIsLoggedIn, setNegativeTc, setTestUrl } from 'store/postman';
 import {setResponseData} from 'store/postman'
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
@@ -83,6 +83,7 @@ const SamplePage = () => {
   const paramsdata = useSelector((state) => state.automation.paramsdata);
   const authorization = useSelector((state) => state.automation.authToken);
   const test_code = useSelector((state) => state.automation.genratedTest);
+  const ng_test_code = useSelector((state) => state.automation.negativeTests);
   console.log("$$$$$$$$$$$$$$$")
   console.log(test_code)
   const dispatch = useDispatch();
@@ -103,20 +104,58 @@ const SamplePage = () => {
   const [isRequestEditable, setIsRequestEditable] = useState(true);//  Indra
   const storedUrl = useSelector((state) => state.automation.url);
   const [enableRequestDropdown, setEnableRequestDropdown] = useState(true);
-  const showFaultyTC=()=>{
-    setShowFaultyTestTab(true)
-  }
+const[fc,setFc]=useState(ng_test_code)
 
   const handleAddFaultyTestCasesClick = async () => {
-    try {
-      const response = await axios.get('YOUR_API_ENDPOINT');
-      setRes(response.data);
-    } catch (error) {
-      console.error('Error making the request:', error);
-    }
-    setAddFaultyTestCasesClicked(true);
-  };
-  
+
+      let resp;
+      setLoadingOverlay(true);
+      try {
+        console.log(baseUrl)
+        resp = await axios.post(`${baseUrl}/generate_test`)
+        setLoadingOverlay(false);
+        setForceRerender((prev) => !prev);
+        setValue(5);
+        seTestResultsLists({ ...resp.data.generated_code });
+        setDisplaySummary(true);
+        dispatch(setNegativeTc(resp.data.generated_code));
+        console.log("%%%%%%%%%%%%%%")
+        console.log(ng_test_code)
+        console.log(resp.data.generated_code);
+        setFc(resp.data.generated_code)
+        localStorage.setItem("negativeTc", resp.data.generated_code);
+        console.log(fc)
+        // Success toast
+        toast.success('Request sent successfully!', {
+          position: 'top-center',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light'
+        });
+      } catch (e) {
+        console.error(e);
+        setResponseBody(e.response.data.code_content);
+        // Error toast
+        let message = e.response.data.error;
+        toast.error(message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light'
+        });
+        setLoadingOverlay(false);
+
+      }
+  }
+
   const handleMouseEnter = () => {
     setHovered(true);
   };
@@ -135,6 +174,7 @@ const SamplePage = () => {
     // dispatch(setGenraetedTest(modifiedCode));
     // setCode(newCode);
     //Indramohan code
+    // setOriginalCode(modifiedCode)
     dispatch(setGenraetedTest(newCode));
 
   };
@@ -143,15 +183,12 @@ const SamplePage = () => {
     setOriginalCode(test_code);
   }, [code]);
 
-  // sendReq=()=>{
-  //   // return <h1>4f3</h1>
-  // }
-
   const handleSend = async () => {
+    
     dispatch(setTestUrl(url));
     console.log(code)
     console.log(originalCode)
-    if (code !== originalCode) {
+    if (code !== test_code) {
       const confirm = window.confirm("Previous script data will be lost. Are you sure you want to send the request?");
       if (confirm) {
         dispatch(setGenraetedTest('')); 
@@ -162,10 +199,6 @@ const SamplePage = () => {
         return;
       }
     }
-  
-    // The rest of your existing code here...
-  
-    // Additional steps to execute when code !== originalCode
  
     if (url.trim().length === 0) {
       return;
@@ -469,53 +502,35 @@ const SamplePage = () => {
             <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Authorization" {...a11yProps(1)}    onClick={() => setShowFaultyTestTab(false)}/>
             <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Headers" {...a11yProps(2)}   onClick={() => setShowFaultyTestTab(false)} />
             <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)}   onClick={() => setShowFaultyTestTab(false)}  />
-          <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)}  onClick={showFaultyTC}   />
+          <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)}  onClick={() => setShowFaultyTestTab(true)}    />
+          {/* <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)}   onClick={() => setShowFaultyTestTab(false)}  /> */}
+          {showFaultyTestTab && code !='' && ( 
+            <Button
+            sx={{
+              padding: '3vh',
+              paddingLeft: '2vh',
+              fontSize: '11px',
+              marginLeft: '19%', // Add left margin here
+              marginTop: '2vh',
+              marginBottom: '1vh',
+              width: 'fit-content', // Set width to fit content
+              height: '4vh',
+              borderRadius: '6px',
+              boxSizing: 'border-box',
+              // variant: 'contained',
+              backgroundColor: '#00cca5',
+              color: '#000',
+              '&:hover': {
+                backgroundColor: '#80e8cc',
+              },
+            }}
+            label="Add Faulty Test Cases"
+            onClick={handleAddFaultyTestCasesClick}
+          >
+            Add More Negative Test Cases
+          </Button>
           
-          { showFaultyTestTab && (
-           <Button
-           sx={{
-             padding: '2vh',
-             paddingLeft:"2vh",
-             fontSize: '11px',
-             marginLeft: '86.4vh',
-             marginTop:"1vh",
-             width: '11%',
-             height: '4vh',
-             borderRadius: '5px',
-             boxSizing: 'border-box',
-             variant: "contained",
-             backgroundColor: '#00cca5',
-             color: '#000',  // Set the text color to black
-             '&:hover': {
-               backgroundColor: '#80e8cc', // Change the color on hover
-             }
-           }}
-           label="Add Faulty Test Cases"
-           {...a11yProps(5)}
-           onClick={handleAddFaultyTestCasesClick}
-         >
-           Add Faulty Test Cases
-         </Button>
-          )         
-              }
-
-          {/* <Button
-          sx={{
-            width: '10%',
-            backgroundColor: '#00cca5',
-            height: '6vh',
-            borderRadius: '5px',
-            boxSizing: 'border-box',
-            marginLeft: '2vh',
-            '&:hover': {
-              backgroundColor: '#80e8cc' // Change the color on hover
-            }
-          }}
-          variant="contained"
-          onClick={handleSend}
-        >
-          Send
-        </Button> */}
+            )}
 
           </Tabs>
               </Box>
@@ -576,12 +591,11 @@ const SamplePage = () => {
               </div>{' '}
             </CustomTabPanel>
             <CustomTabPanel value={value} index={5}>
-                {addFaultyTestCasesClicked && (
                   <Editor
                     height="50vh"
                     width="100%"
                     defaultLanguage="json"
-                    defaultValue={res}
+                    defaultValue={fc}
                     options={{
                       formatOnType: true,
                       formatOnPaste: true,
@@ -590,7 +604,7 @@ const SamplePage = () => {
                       }
                     }}
                   />
-                )}
+
               </CustomTabPanel>
           </Box>
         </ThemeProvider>
@@ -662,6 +676,5 @@ const SamplePage = () => {
       </Paper>
     </MainCard>
   );
-};
-
+            }
 export default SamplePage;
