@@ -112,7 +112,7 @@ export function Body({ height }) {
             onChange={() => handleRadioClick(0)}
             style={radioStyle}
             size="4px"
-            sx={{ padding: '0px' }}
+            sx={{ padding: '0px', paddingRight:'1vh' }}
           />
           <label htmlFor="none">None</label>
         </div>
@@ -123,7 +123,7 @@ export function Body({ height }) {
             checked={value === 1}
             onChange={() => handleRadioClick(1)}
             size="4px"
-            sx={{ padding: '0px' }}
+            sx={{ padding: '0px', paddingRight:'1vh' }}
           />
           <label htmlFor="form-data">Form-Data</label>
         </div>
@@ -134,7 +134,7 @@ export function Body({ height }) {
             checked={value === 2}
             onChange={() => handleRadioClick(2)}
             size="4px"
-            sx={{ padding: '0px' }}
+            sx={{ padding: '0px', paddingRight:'1vh' }}
           />
           <label htmlFor="raw">Raw</label>
         </div>
@@ -145,7 +145,7 @@ export function Body({ height }) {
             checked={value === 3}
             onChange={() => handleRadioClick(3)}
             size="4px"
-            sx={{ padding: '0px' }}
+            sx={{ padding: '0px', paddingRight:'1vh' }}
           />
           <label htmlFor="binary">Binary</label>
         </div>
