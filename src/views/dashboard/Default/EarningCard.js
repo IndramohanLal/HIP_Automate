@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 let titles = {
   Average_Code_Generation_Time: 'Average Code Generation Time',
-  Negative_Test_Cases: 'Negative Test Cases',
+  Negative_Test_Cases: 'Failed Test Cases',
   Passes_Test_Cases: 'Passed Test Cases',
   Total_API_Tests: 'Total API Tested',
   Average_API_Response_Time: 'Average API Response Time'

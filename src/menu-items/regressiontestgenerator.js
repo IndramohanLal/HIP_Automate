@@ -1,5 +1,5 @@
 // assets
-import { IconBrandChrome, IconHelp,IconCodeCircle2 } from '@tabler/icons';
+import { IconBrandChrome, IconHelp,IconCodeCircle2, IconBook } from '@tabler/icons';
 
 // constant
 const icons = { IconBrandChrome, IconHelp };
@@ -8,7 +8,7 @@ const icons = { IconBrandChrome, IconHelp };
 
 const other = {
   id: 'sample-docs-roadmap',
-  title: "Regression Test Generator",
+  title: "Test Generator",
   type: 'group',
   children: [
     {
@@ -17,6 +17,22 @@ const other = {
       type: 'item',
       url: '/sample-page',
       icon: IconCodeCircle2,
+      breadcrumbs: false
+    },
+    {
+      id: "generate Script using API logs",
+      title: 'Generate Script Using API Logs',
+      type: 'item',
+      url: "/generate-script",
+      icon: IconBook,
+      breadcrumbs: false
+    },
+    {
+      id: "generate Script using PDF",
+      title: 'Generate Script Using PDF',
+      type: 'item',
+      url: "/generate-pdf-script",
+      icon: IconBook,
       breadcrumbs: false
     },
     // {

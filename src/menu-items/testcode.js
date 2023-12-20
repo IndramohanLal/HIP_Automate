@@ -36,22 +36,6 @@ const other = {
       breadcrumbs: false
     },
     {
-      id: "generate Script using API logs",
-      title: 'Generate Script Using API Logs',
-      type: 'item',
-      url: "/generate-script",
-      icon: IconBook,
-      breadcrumbs: false
-    },
-    {
-      id: "generate Script using PDF",
-      title: 'Generate Script Using PDF',
-      type: 'item',
-      url: "/generate-pdf-script",
-      icon: IconBook,
-      breadcrumbs: false
-    },
-    {
       id: "upload Script",
       title: 'Upload Script',
       type: 'item',
@@ -63,12 +47,10 @@ const other = {
       id: 'generate-readme',
       title: 'Generate ReadMe',
       type: 'item',
-      url: "",
+      url: "/generate-readme",
       icon: IconBook,
       breadcrumbs: false
     },
-
-
   ]
 };
 

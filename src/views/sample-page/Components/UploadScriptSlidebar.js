@@ -9,10 +9,18 @@ const GeneratePdfScript = () => {
     const [pdfFile, setPdfFile] = useState(null);
     const [testResultsLists, setTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
     const [loading, setLoading] = useState(false);
+    const [fileContent, setFileContent] = useState(null);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setPdfFile(file);
+
+        // Read the content of the uploaded file
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            setFileContent(e.target.result);
+        };
+        reader.readAsText(file, 'UTF-8');
     };
 
     const handleHitTestScript = async () => {
@@ -32,7 +40,6 @@ const GeneratePdfScript = () => {
                     }
                 });
             const responseData = response.data;
-            // console.log(responseData)
             setTestResultsLists({ ...responseData });
             setResponseText(JSON.stringify(responseData, null, 2));
             setForceRerender((prev) => !prev);
@@ -102,9 +109,21 @@ const GeneratePdfScript = () => {
                   </Grid>
                 )}
             </Grid>
+
+            {/* Display the content of the uploaded file */}
+            {/* {fileContent && (
+                <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+                    <Typography variant="h6" gutterBottom>
+                        Uploaded File Content
+                    </Typography>
+                    <Typography>
+                        {fileContent}
+                    </Typography>
+                </Paper>
+            )} */}
           </Paper>
         </Container>
-      );
-    };
+    );
+};
 
 export default GeneratePdfScript;

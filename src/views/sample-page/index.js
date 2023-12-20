@@ -72,19 +72,18 @@ const SamplePage = () => {
   const [loadingOverlay, setLoadingOverlay] = useState(false);
   const [enableRunTest, setEnableRunTest] = useState(false);
   const [url, setUrl] = useState('');
-  const [value, setValue] = useState(0); // Add this line to initialize the 'value' state
+  const [value, setValue] = useState(0);
   const [value1, setValue1] = useState(0);
   const [requestType, setRequestType] = useState('GET');
 
   const bodydata = useSelector((state) => state.automation.bodyContent);
   const contentType = useSelector((state) => state.automation.bodyContentType);
-  // const res=useSelector((state)=>state.automation.responseData)
   const headerData = useSelector((state) => state.automation.headerData);
   const paramsdata = useSelector((state) => state.automation.paramsdata);
   const authorization = useSelector((state) => state.automation.authToken);
   const test_code = useSelector((state) => state.automation.genratedTest);
-  console.log("$$$$$$$$$$$$$$$")
-  console.log(test_code)
+  // console.log("$$$$$$$$$$$$$$$")
+  // console.log(test_code)
   const dispatch = useDispatch();
   const [testResults, seTestResults] = useState(null);
   const [testResultsLists, seTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
@@ -130,22 +129,16 @@ const SamplePage = () => {
   const handleChangeeditor = (newCode) => {
 
     const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
-
     setCode(modifiedCode);
-    // dispatch(setGenraetedTest(modifiedCode));
-    // setCode(newCode);
-    //Indramohan code
     dispatch(setGenraetedTest(newCode));
 
   };
 
   useEffect(() => {
+    setUrl(storedUrl || '');
     setOriginalCode(test_code);
-  }, [code]);
+  }, [code, storedUrl]);
 
-  // sendReq=()=>{
-  //   // return <h1>4f3</h1>
-  // }
 
   const handleSend = async () => {
     dispatch(setTestUrl(url));
@@ -158,14 +151,9 @@ const SamplePage = () => {
         setCode(''); 
         setOriginalCode(''); 
       } else {
-        // User canceled the action
         return;
       }
     }
-  
-    // The rest of your existing code here...
-  
-    // Additional steps to execute when code !== originalCode
  
     if (url.trim().length === 0) {
       return;
@@ -212,14 +200,13 @@ const SamplePage = () => {
       });
 
       dispatch(setGenraetedTest(resp.data.test_code));
-      setIsRequestEditable(false);//Indra
+      setIsRequestEditable(false);
 
       setCode(resp.data.test_code);
       setResponseBody(resp.data.code_content);
       console.log(resp.data.code_content)
       localStorage.setItem("myData", resp.data.code_content);
       dispatch(setResponseData(resp.data.code_content))
-      // setRes(useSelector((state)=>state.automation.responseData))
       setLoadingOverlay(false);
       setForceRerender((prev) => !prev);
       setValue(4);
@@ -229,7 +216,6 @@ const SamplePage = () => {
       console.log(resp);
       localStorage.setItem("myData", resp.data.code_content);
 
-      // Success toast
       toast.success('Request sent successfully!', {
         position: 'top-center',
         autoClose: 3000,
@@ -243,7 +229,6 @@ const SamplePage = () => {
     } catch (e) {
       console.error(e);
       setResponseBody(e.response.data.code_content);
-      // Error toast
       let message = e.response.data.error;
       toast.error(message, {
         position: 'top-center',
@@ -277,14 +262,9 @@ const SamplePage = () => {
   }, []);
   useEffect(() => {
     const handleBeforeUnload = () => {
-        // Clear the data from local storage
         localStorage.removeItem("myData");
     };
-
-    // Attach the event listener
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // Clean up the event listener when the component is unmounted
     return () => {
         window.removeEventListener("beforeunload", handleBeforeUnload);
     };
@@ -307,7 +287,6 @@ const SamplePage = () => {
       setValue1(2);
     } catch (error) {
       console.error('Error making the request:', error);
-      // Handle error as needed
     }
     setDisplaySummary(true);
   };
@@ -316,11 +295,12 @@ const SamplePage = () => {
   };
   const handleUrlChange = (event) => {
     const newUrl = event.target.value;
-    setIsRequestEditable(true);
-    // Regular expression for URL validatio
 
-    setUrl(newUrl); // Update the input field
-    setValidUrl(newUrl.startsWith('https://') || newUrl.startsWith('http://')); // Check if the new URL is valid
+    dispatch(setTestUrl(newUrl));
+    setIsRequestEditable(true);
+
+    setUrl(newUrl);
+    setValidUrl(newUrl.startsWith('https://') || newUrl.startsWith('http://'));
 
     const isUrlChanged = newUrl.trim() !== storedUrl.trim();
     setEnableRequestDropdown(isUrlChanged);
@@ -341,10 +321,9 @@ const SamplePage = () => {
       case 'DELETE':
         return 'red';
       default:
-        return 'black'; // Default color
+        return 'black';
     }
   };
-  // const resData = useSelector((state) => state.automation.responseData); 
   useEffect(() => { }, [height]);
   const openInNewWindow = async () => {
     let resp;
@@ -381,7 +360,7 @@ const SamplePage = () => {
             borderRadius: '5px 0px 0px 5px',
             fontWeight: '600',
             border: '1px solid #787878',
-            color: getColorForOption(requestType) // Function to get color based on the selected value
+            color: getColorForOption(requestType)
           }}
         >
           <option value="GET" style={{ color: 'green', fontWeight: '600' }}>
@@ -406,7 +385,6 @@ const SamplePage = () => {
           value={url}
           onChange={handleUrlChange}
           placeholder="Enter Url"
-          // disabled={!isRequestEditable}//Indra
           style={{
             width: '76%',
             height: '6vh',
@@ -414,7 +392,7 @@ const SamplePage = () => {
             outline: 'none',
             borderRadius: '0px 5px 5px 0px',
             paddingLeft: '15px',
-            border: validUrl ? '1px solid #787878' : '1px solid red' // Change the border color based on URL validity
+            border: validUrl ? '1px solid #787878' : '1px solid red'
           }}
         />
         {validUrl ? null : <div style={{ color: 'red', marginLeft: '10px' }}>Invalid URL</div>}
@@ -428,7 +406,7 @@ const SamplePage = () => {
             boxSizing: 'border-box',
             marginLeft: '2vh',
             '&:hover': {
-              backgroundColor: '#80e8cc' // Change the color on hover
+              backgroundColor: '#80e8cc'
             }
           }}
           variant="contained"
@@ -485,9 +463,9 @@ const SamplePage = () => {
              boxSizing: 'border-box',
              variant: "contained",
              backgroundColor: '#00cca5',
-             color: '#000',  // Set the text color to black
+             color: '#000',
              '&:hover': {
-               backgroundColor: '#80e8cc', // Change the color on hover
+               backgroundColor: '#80e8cc',
              }
            }}
            label="Add Faulty Test Cases"
@@ -498,24 +476,6 @@ const SamplePage = () => {
          </Button>
           )         
               }
-
-          {/* <Button
-          sx={{
-            width: '10%',
-            backgroundColor: '#00cca5',
-            height: '6vh',
-            borderRadius: '5px',
-            boxSizing: 'border-box',
-            marginLeft: '2vh',
-            '&:hover': {
-              backgroundColor: '#80e8cc' // Change the color on hover
-            }
-          }}
-          variant="contained"
-          onClick={handleSend}
-        >
-          Send
-        </Button> */}
 
           </Tabs>
               </Box>
@@ -537,19 +497,6 @@ const SamplePage = () => {
               <Body height={height}></Body>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={4}>
-              {/* {
-                enableRunTest &&
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <button onClick={runTest} className="genrate_button">
-                    Run Test
-                  </button>
-                </div>
-              } */}
-              {/* <textarea
-                value={test_code}
-                style={{ width: '97%', height: height, border: 'none', outline: 'none', resize: 'none' }}
-                placeholder="Enter raw data"
-              ></textarea> */}
               <div className="editor-container" style={{ overflowX: 'hidden' }}>
               <Editor
                 key={forceRerender}
@@ -563,10 +510,10 @@ const SamplePage = () => {
                 minimap: {
                   enabled: false              
                 },
-                // Additional editor options
+
                 language: {
                   comments: {
-                   lineComment: '#',  // Adjust this line based on your language
+                   lineComment: '#',
                   },
                 },
                 }}
@@ -616,9 +563,6 @@ const SamplePage = () => {
                 <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Test Results" {...a11yProps1(2)} />
               </Tabs>
             </Box>
-            {/* {loadingOverlay && ( */}
-
-            {/* )} */}
             <CustomTabPanel value={value1} index={0}>
               {!loadingOverlay && (
                 <div className="editor-container">
@@ -644,14 +588,6 @@ const SamplePage = () => {
               {!loadingOverlay && <h3>No Data</h3>}
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={2}>
-              {/* {displaySummary && <button
-                onClick={() => {
-                  openInNewWindow(testResults);
-                }}
-                className="genrate_button"
-              >
-                Display Summary
-              </button>} */}
               <TestResults key={forceRerender} testResultsLists={testResultsLists}></TestResults>
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={3}>
