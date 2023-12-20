@@ -40,11 +40,12 @@ const GeneratePdfScript = () => {
                     }
                 });
             const responseData = response.data;
+            // console.log(responseData)
             setTestResultsLists({ ...responseData });
-            setResponseText(JSON.stringify(responseData, null, 2));
-            setForceRerender((prev) => !prev);
+            // setResponseText(JSON.stringify(responseData, null, 2));
+            // setForceRerender((prev) => !prev);
         } catch (error) {
-            setResponseText(`Error: ${error.message}`);
+            console.log(error)
         } finally {
             setLoading(false);
         }

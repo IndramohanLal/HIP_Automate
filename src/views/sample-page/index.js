@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { Resizable } from 're-resizable';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGenraetedTest, setTestUrl } from 'store/postman';
+import { setGenraetedTest, setTestResult, setTestUrl } from 'store/postman';
 import {setResponseData} from 'store/postman'
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
@@ -102,6 +102,8 @@ const SamplePage = () => {
   const [isRequestEditable, setIsRequestEditable] = useState(true);//  Indra
   const storedUrl = useSelector((state) => state.automation.url);
   const [enableRequestDropdown, setEnableRequestDropdown] = useState(true);
+  const testResult = useSelector((state) => state.automation.testResult);
+
   const showFaultyTC=()=>{
     setShowFaultyTestTab(true)
   }
@@ -198,13 +200,14 @@ const SamplePage = () => {
         request_body,
         test_code: code
       });
-
+      console.log(resp.data.result)
       dispatch(setGenraetedTest(resp.data.test_code));
+      dispatch(setTestResult(resp.data.result))
       setIsRequestEditable(false);
 
       setCode(resp.data.test_code);
       setResponseBody(resp.data.code_content);
-      console.log(resp.data.code_content)
+      // console.log(resp.data.code_content)
       localStorage.setItem("myData", resp.data.code_content);
       dispatch(setResponseData(resp.data.code_content))
       setLoadingOverlay(false);
@@ -280,7 +283,7 @@ const SamplePage = () => {
   const runTest = async () => {
     try {
       const response = await axios.post(`${baseUrl}/run_test`, { user_id });
-
+      dispatch(setTestResult(response.data));//indra2
       seTestResultsLists({ ...response.data });
       console.log(testResultsLists);
       console.log(response);
@@ -588,7 +591,7 @@ const SamplePage = () => {
               {!loadingOverlay && <h3>No Data</h3>}
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={2}>
-              <TestResults key={forceRerender} testResultsLists={testResultsLists}></TestResults>
+              <TestResults key={forceRerender} testResultsLists={testResult}></TestResults>
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={3}>
               {!loadingOverlay && <div></div>}

@@ -49,7 +49,7 @@ const DataDisplay = () => {
                                  sx={{
                                     width: 'auto',
                                     backgroundColor: '#00cca5',
-                                    height: '6vh',
+                                    height: '4vh',
                                     borderRadius: '5px',
                                     boxSizing: 'border-box',
                                     marginLeft: '2vh',

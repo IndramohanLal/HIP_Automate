@@ -68,7 +68,7 @@ const TestSideBarButton = () => {
         sx={{
           width: 'auto',
           backgroundColor: '#00cca5',
-          height: '6vh',
+          height: '4vh',
           borderRadius: '5px',
           boxSizing: 'border-box',
           marginLeft: '2vh',
@@ -84,7 +84,7 @@ const TestSideBarButton = () => {
         sx={{
           width: 'auto',
           backgroundColor: '#00cca5',
-          height: '6vh',
+          height: '4vh',
           borderRadius: '5px',
           boxSizing: 'border-box',
           marginLeft: '2vh',
@@ -102,7 +102,7 @@ const TestSideBarButton = () => {
         container
         justifyContent="center"
         alignItems="center"
-        style={{ height: "100vh", overflowX: "hidden" }}
+        style={{ height: "100vh", overflowX: "hidden"}}
       >
         {loading && (
           <CircularProgress

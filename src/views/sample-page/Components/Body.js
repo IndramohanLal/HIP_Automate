@@ -114,9 +114,9 @@ export function Body({ height }) {
             size="4px"
             sx={{ padding: '0px' }}
           />
-          <label htmlFor="none">none</label>
+          <label htmlFor="none">None</label>
         </div>
-        <div>
+        <div style={{ marginLeft: '30px' }}>
           <Radio 
             type="radio"
             name="bodyType"
@@ -125,9 +125,9 @@ export function Body({ height }) {
             size="4px"
             sx={{ padding: '0px' }}
           />
-          <label htmlFor="form-data">form-data</label>
+          <label htmlFor="form-data">Form-Data</label>
         </div>
-        <div>
+        <div style={{ marginLeft: '30px' }}>
           <Radio
             type="radio"
             name="bodyType"
@@ -136,9 +136,9 @@ export function Body({ height }) {
             size="4px"
             sx={{ padding: '0px' }}
           />
-          <label htmlFor="raw">raw</label>
+          <label htmlFor="raw">Raw</label>
         </div>
-        <div>
+        <div style={{ marginLeft: '30px' }}>
           <Radio
             type="radio"
             name="bodyType"
@@ -147,7 +147,7 @@ export function Body({ height }) {
             size="4px"
             sx={{ padding: '0px' }}
           />
-          <label htmlFor="binary">binary</label>
+          <label htmlFor="binary">Binary</label>
         </div>
         {value === 2 && (
           <div>

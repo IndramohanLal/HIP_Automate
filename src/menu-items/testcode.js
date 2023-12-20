@@ -1,5 +1,5 @@
 // assets
-import { IconBrandChrome, IconHelp, IconArrowsMoveVertical, IconScan, IconBook, IconFileDownload } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconArrowsMoveVertical, IconScan, IconBook, IconFileDownload, IconFileUpload } from '@tabler/icons';
 
 // constant
 const icons = { IconBrandChrome, IconHelp };
@@ -40,7 +40,7 @@ const other = {
       title: 'Upload Script',
       type: 'item',
       url: "/upload-script",
-      icon: IconBook,
+      icon: IconFileUpload,
       breadcrumbs: false
     },
     {

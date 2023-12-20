@@ -3,21 +3,27 @@ import { useEffect } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
-const TestResults = ({ testResultsLists }) => {
+const TestResults = ({ testResult, testResultsLists }) => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [responseRecived, setresponseRecived] = useState(true)
+  const [responseRecived, setResponseRecived] = useState(true);
   const [testResults, setTestResults] = useState({
     errors: [],
     failed_tests: [],
     success_tests: [],
     summary: ''
   });
+
   useEffect(() => {
-        setTestResults({ ...testResultsLists });
-    if (testResults.summary != '') {
-      setresponseRecived(true)
+    if (testResult) {
+      setTestResults({ ...testResult });
+    } else if (testResultsLists) {
+      setTestResults({ ...testResultsLists });
     }
-  }, []);
+
+    if (testResults.summary !== '') {
+      setResponseRecived(true);
+    }
+  }, [testResult, testResultsLists]);
   return (
     <div >
       {responseRecived && <h4>{testResults.success_tests.length + testResults.failed_tests.length} Tests Run, {testResults.success_tests.length} Passed, {testResults.failed_tests.length} Failed, {testResults.errors.length} Errors</h4>}
