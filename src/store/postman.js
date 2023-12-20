@@ -19,6 +19,8 @@ const AutomationSlice = createSlice({
     url: '',
     isLoggedin:false,
     responseData:"",
+    pdfData:[],
+    negativeTests:""
   },
   reducers: {
     // Define your actions and reducers here
@@ -49,14 +51,18 @@ const AutomationSlice = createSlice({
     },
     setResponseData:(state,action)=>{
           state.responseData=action.payload
+    },
+    
+    setPdfData:(state,action)=>{
+      state.responseData=action.payload
+    },
+    setNegativeTc:(state,action)=>{
+      state.negativeTests=action.payload
     }
-    
-
-    
   }
 });
 
-export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl ,setIsLoggedIn,setResponseData} = AutomationSlice.actions;
+export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl ,setIsLoggedIn,setResponseData,setPdfData,setNegativeTc} = AutomationSlice.actions;
 export const selectParamsData = (state) => state.Automation.paramsdata;
 
 export default AutomationSlice.reducer;
