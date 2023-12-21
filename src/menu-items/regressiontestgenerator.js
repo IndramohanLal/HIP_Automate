@@ -1,5 +1,5 @@
 // assets
-import { IconBrandChrome, IconHelp,IconCodeCircle2, IconBook } from '@tabler/icons';
+import { IconBrandChrome, IconHelp,IconCodeCircle2, IconBook, IconFileText, IconFile } from '@tabler/icons';
 
 // constant
 const icons = { IconBrandChrome, IconHelp };
@@ -24,7 +24,7 @@ const other = {
       title: 'Generate Script Using API Logs',
       type: 'item',
       url: "/generate-script",
-      icon: IconBook,
+      icon: IconFile,
       breadcrumbs: false
     },
     {
@@ -32,7 +32,7 @@ const other = {
       title: 'Generate Script Using PDF',
       type: 'item',
       url: "/generate-pdf-script",
-      icon: IconBook,
+      icon: IconFileText,
       breadcrumbs: false
     },
     // {

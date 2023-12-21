@@ -112,7 +112,7 @@ const GeneratePdfScript = () => {
 
         <Box sx={{ marginTop: '20px' }}>
           <Tabs value={tabValue} onChange={handleTabChange} centered>
-            {logs && <Tab label="View Log Details" />}
+            {logs && <Tab label="View Document Details" />}
             {generatedScript && <Tab label="View Generated Script" />}
           </Tabs>
         </Box>

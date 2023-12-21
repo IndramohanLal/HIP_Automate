@@ -1,5 +1,6 @@
 import React from 'react';
 import { Paper, Typography, Container } from '@mui/material';
+import { CenterFocusStrong } from '@mui/icons-material';
 
 const GenerateReadMe = () => {
   return (
@@ -8,7 +9,7 @@ const GenerateReadMe = () => {
         <Typography variant="h5" gutterBottom>
         </Typography>
         <Typography variant="h5">
-          This is a test Generate ReadMe text.
+          Generation of ReadMe file is in progress...
         </Typography>
       </Paper>
     </Container>
