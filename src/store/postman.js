@@ -2,26 +2,29 @@
 import { createSlice } from '@reduxjs/toolkit';
 // import { actions } from 'react-table';
 
+const initialState = {
+  // Your initial state goes here
+  paramsdata: [{ key: '', value: '', selected: false }],
+  authToken: '',
+  headerData: [{ key: '', value: '', selected: false }],
+  bodyContentType: 0,
+  bodyContent: {
+    fromData: [{ key: '', value: '', selected: false, type: 'text', file: null }],
+    raw: { type: "json", data: '' },
+    binary: null
+  },
+  genratedTest: '',
+  javascriptcode: '',
+  url: '',
+  testResult: '',
+  isLoggedin: false,
+  responseData: "",
+  negativeTests:"",
+};
+
 const AutomationSlice = createSlice({
   name: 'AutomationSlice',
-  initialState: {
-    // Your initial state goes here
-    paramsdata: [{ key: '', value: '', selected: false }],
-    authToken: '',
-    headerData: [{ key: '', value: '', selected: false }],
-    bodyContentType: 0,
-    bodyContent: {
-      fromData: [{ key: '', value: '', selected: false, type: 'text', file: null }],
-      raw: { type: "json", data: '' },
-      binary: null
-    },
-    genratedTest: '',
-    javascriptcode:'',
-    url: '',
-    testResult:'',
-    isLoggedin:false,
-    responseData:"",
-  },
+  initialState,
   reducers: {
     // Define your actions and reducers here
     setParamsdata: (state, action) => {
@@ -59,12 +62,15 @@ const AutomationSlice = createSlice({
       state.testResult=action.payload
     },
     
+    resetState: () => initialState,
 
-    
+    setNegativeTc:(state,action)=>{
+      state.negativeTests=action.payload
+    },
   }
 });
 
-export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl , setJavascriptCode, setIsLoggedIn, setResponseData, setTestResult} = AutomationSlice.actions;
+export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl , setJavascriptCode, setIsLoggedIn, setResponseData, setTestResult,resetState,setNegativeTc  } = AutomationSlice.actions;
 export const selectParamsData = (state) => state.Automation.paramsdata;
 
 export default AutomationSlice.reducer;
