@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
+import {resetState as resetAutomationState } from '../../../../store/postman'
 // material-ui
 import {
   Avatar,
@@ -51,6 +52,7 @@ const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // const [sdm, setSdm] = useState(true);
   // // const [value, setValue] = useState('');
@@ -63,6 +65,7 @@ const ProfileSection = () => {
   const anchorRef = useRef(null);
   const handleLogout = async () => {
     localStorage.clear();
+    dispatch(resetAutomationState());
     navigate("/login")
   };
 
