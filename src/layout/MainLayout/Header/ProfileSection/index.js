@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {resetState as resetAutomationState } from '../../../../store/postman'
+import axios from 'axios';
+const baseUrl = `${process.env.REACT_APP_AUTOMATE}`;
 // material-ui
 import {
   Avatar,
@@ -33,6 +35,7 @@ import Transitions from 'ui-component/extended/Transitions';
 
 // assets
 import { IconLogout, IconSettings, IconUser } from '@tabler/icons';
+import { CookieSharp } from '@mui/icons-material';
 
 // ==============================|| PROFILE MENU ||============================== //
 const ProfileSection = () => {
@@ -66,7 +69,15 @@ const ProfileSection = () => {
   const handleLogout = async () => {
     localStorage.clear();
     dispatch(resetAutomationState());
+    let resp;
+    try{
+    resp = await axios.post(`${baseUrl}/logout`)
     navigate("/login")
+    }
+    catch (e){
+      console.log(e)
+    }
+
   };
 
   const handleClose = (event) => {

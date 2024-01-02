@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { Resizable } from 're-resizable';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGenraetedTest, setTestResult, setTestUrl } from 'store/postman';
+import { setGenraetedTest, setNegativeTc, setTestResult, setTestUrl } from 'store/postman';
 import {setResponseData} from 'store/postman'
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
@@ -82,19 +82,18 @@ const SamplePage = () => {
   const paramsdata = useSelector((state) => state.automation.paramsdata);
   const authorization = useSelector((state) => state.automation.authToken);
   const test_code = useSelector((state) => state.automation.genratedTest);
-  // console.log("$$$$$$$$$$$$$$$")
-  // console.log(test_code)
+  const negativeTests = useSelector((state) => state.automation.negativeTests);
   const dispatch = useDispatch();
   const [testResults, seTestResults] = useState(null);
   const [testResultsLists, seTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
-  const [height, setHeight] = useState('40vh');
+  const [height, setHeight] = useState('50vh');
   const [responseBody, setResponseBody] = useState('');
 
   const [validUrl, setValidUrl] = useState(true);
   const [isHovered, setHovered] = useState(false);
   const [forceRerender, setForceRerender] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [res,setRes] = useState('');
+  const [res,setRes] = useState(negativeTests);
   const [code, setCode] = useState(test_code);
   const [originalCode, setOriginalCode] = useState(test_code);
   const [addFaultyTestCasesClicked, setAddFaultyTestCasesClicked] = useState(false);
@@ -103,19 +102,70 @@ const SamplePage = () => {
   const storedUrl = useSelector((state) => state.automation.url);
   const [enableRequestDropdown, setEnableRequestDropdown] = useState(true);
   const testResult = useSelector((state) => state.automation.testResult);
+  const ngTestResult=useSelector((state) => state.automation.negativeTestResult);
+  const [ng,setNg]=useState("")
+  const [showbutton, setShowButton] = useState("");
 
-  const showFaultyTC=()=>{
-    setShowFaultyTestTab(true)
+  const changeFaultyTestCase=(newCodee)=>{
+    setRes(newCodee)
+  }
+
+  useEffect(() => {
+    setUrl(storedUrl || '');
+    // setOriginalCode(test_code);
+  }, [code, storedUrl,dispatch,ng,res]);
+ 
+  const  handleRunFaultyTestCasesClick=async()=>{
+    let resp;
+    if(url!='')
+    {
+    setLoadingOverlay(true);
+    try {
+      console.log("faultyTestCaseResult!!!!!!!!!")
+      resp = await axios.post(`${baseUrl}/run_dynamic_tests`,{
+        generated_code:res
+      })
+      console.log(resp)
+      console.log(resp.data)
+      dispatch(setTestResult(resp.data));
+      setForceRerender((prev) => !prev);
+      seTestResultsLists({ ...resp.data});
+      console
+      setNg(resp.data.summary)
+      setValue(5);
+      setLoadingOverlay(false);
+    } catch (error) {
+      console.error('Error making the request:', error);
+      setLoadingOverlay(false);
+    }
+  }
+    
   }
 
   const handleAddFaultyTestCasesClick = async () => {
+    
+  //  setShowButton("Negative Tests")
+    let resp;
+
+    if(url!='')
+    {
+    setLoadingOverlay(true);
     try {
-      const response = await axios.get('YOUR_API_ENDPOINT');
-      setRes(response.data);
+      console.log("_____________!!!!!!!!!")
+      resp = await axios.post(`${baseUrl}/generate_test`,{ 
+        api_url: url,
+        http_method: requestType,
+        content_type: 'json',} )
+      setRes(resp.data.generated_code);
+      console.log(resp.data.generated_code)
+      dispatch(setNegativeTc(resp.data.generated_code))
+      setValue(5);
+      setLoadingOverlay(false);
     } catch (error) {
       console.error('Error making the request:', error);
+      setLoadingOverlay(false);
     }
-    setAddFaultyTestCasesClicked(true);
+  }
   };
   
   const handleMouseEnter = () => {
@@ -130,22 +180,18 @@ const SamplePage = () => {
   };
   const handleChangeeditor = (newCode) => {
 
-    const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
-    setCode(modifiedCode);
+    // const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
+    setCode(newCode);
     dispatch(setGenraetedTest(newCode));
 
   };
 
-  useEffect(() => {
-    setUrl(storedUrl || '');
-    setOriginalCode(test_code);
-  }, [code, storedUrl]);
-
-
   const handleSend = async () => {
+    dispatch(setGenraetedTest(""))
+    dispatch(setNegativeTc(""))
     dispatch(setTestUrl(url));
-    console.log(code)
-    console.log(originalCode)
+    // console.log(code)
+    // console.log(originalCode)
     if (code !== originalCode) {
       const confirm = window.confirm("Previous script data will be lost. Are you sure you want to send the request?");
       if (confirm) {
@@ -198,27 +244,35 @@ const SamplePage = () => {
         param_values,
         Authorization: authorization,
         request_body,
-        test_code: code
-      });
-      console.log(resp.data.result)
-      dispatch(setGenraetedTest(resp.data.test_code));
-      dispatch(setTestResult(resp.data.result))
-      setIsRequestEditable(false);
+        test_code: showbutton === "Negative Tests" ? res : code,
+        // test_code:code
 
+      });
+      console.log(test_code)
+      // consolelog("QFEeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+      console.log(resp)
+      console.log(resp.data.result);
+    
+      dispatch(setGenraetedTest(resp.data.test_code));
+      dispatch(setTestResult(resp.data.result));
+      setIsRequestEditable(false);
       setCode(resp.data.test_code);
+      
       setResponseBody(resp.data.code_content);
-      // console.log(resp.data.code_content)
       localStorage.setItem("myData", resp.data.code_content);
-      dispatch(setResponseData(resp.data.code_content))
+      dispatch(setResponseData(resp.data.code_content));
       setLoadingOverlay(false);
       setForceRerender((prev) => !prev);
       setValue(4);
       seTestResultsLists({ ...resp.data.result });
       setDisplaySummary(true);
-
+      
+    
       console.log(resp);
       localStorage.setItem("myData", resp.data.code_content);
 
+      
+    
       toast.success('Request sent successfully!', {
         position: 'top-center',
         autoClose: 3000,
@@ -245,7 +299,7 @@ const SamplePage = () => {
       });
       setLoadingOverlay(false);
     }
-  };
+  }
 
   const r=useSelector((state)=>state.automation.responseData)
   localStorage.setItem("res", r);
@@ -280,19 +334,19 @@ const SamplePage = () => {
     }
   };
 
-  const runTest = async () => {
-    try {
-      const response = await axios.post(`${baseUrl}/run_test`, { user_id });
-      dispatch(setTestResult(response.data));//indra2
-      seTestResultsLists({ ...response.data });
-      console.log(testResultsLists);
-      console.log(response);
-      setValue1(2);
-    } catch (error) {
-      console.error('Error making the request:', error);
-    }
-    setDisplaySummary(true);
-  };
+  // const runTest = async () => {
+  //   try {
+  //     const response = await axios.post(`${baseUrl}/run_test`, { user_id });
+  //     dispatch(setTestResult(response.data));//indra2
+  //     seTestResultsLists({ ...response.data });
+  //     console.log(testResultsLists);
+  //     console.log(response);
+  //     setValue1(2);
+  //   } catch (error) {
+  //     console.error('Error making the request:', error);
+  //   }
+  //   setDisplaySummary(true);
+  // };
   const handleChangeType = (event) => {
     setRequestType(event.target.value);
   };
@@ -344,7 +398,7 @@ const SamplePage = () => {
       alert('Your browser blocked the pop-up window. Please allow pop-ups for this site.');
     }
   };
-  const [showCombinedInput, setShowCombinedInput] = useState(false);
+ 
   return (
     <MainCard style={{ position: 'relative' }}>
       <ToastContainer></ToastContainer>
@@ -446,13 +500,15 @@ const SamplePage = () => {
           >
             <Box sx={{ marginLeft: '0.7%', borderBottom: 1, borderColor: 'divider', padding: '10', width: '97%' }}>
             <Tabs value={value} onChange={(event, newValue) => handleChange(event, newValue)} aria-label="basic tabs example">
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Params" {...a11yProps(0)}   onClick={() => setShowFaultyTestTab(false)} />
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Authorization" {...a11yProps(1)}    onClick={() => setShowFaultyTestTab(false)}/>
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Headers" {...a11yProps(2)}   onClick={() => setShowFaultyTestTab(false)} />
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)}   onClick={() => setShowFaultyTestTab(false)}  />
-          <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)}  onClick={showFaultyTC}   />
-          
-          { showFaultyTestTab && (
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Params" {...a11yProps(0)} onClick={()=>{setShowButton("Params")}} />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Authorization" {...a11yProps(1)} onClick={()=>{setShowButton("Authorization")}} />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Headers" {...a11yProps(2)} onClick={()=>{setShowButton("Headers")}} />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)} onClick={()=>{setShowButton("Body")}}  />
+          <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)} onClick={()=>{setShowButton("Tests")}} />
+
+        {  code != "" && <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Negative Tests" {...a11yProps(5)} onClick={()=>{setShowButton("Negative Tests")}} /> }
+           
+          {/* { code!='' && (
            <Button
            sx={{
              padding: '2vh',
@@ -478,7 +534,7 @@ const SamplePage = () => {
            Add Faulty Test Cases
          </Button>
           )         
-              }
+              } */}
 
           </Tabs>
               </Box>
@@ -524,23 +580,79 @@ const SamplePage = () => {
               />
 
               </div>{' '}
+              
+       
             </CustomTabPanel>
             <CustomTabPanel value={value} index={5}>
-                {addFaultyTestCasesClicked && (
+            {showbutton=="Negative Tests"  && ( <Button
+            sx={{
+              width: { xs: '100%', sm: '50%', md: '30%', lg: '20%', xl: '15%' },
+              backgroundColor: '#00cca5',
+              height: '4vh',
+              borderRadius: '5px',
+              boxSizing: 'border-box',
+              marginTop: '-2vh',
+              marginLeft: { xs: '0%', sm: '25%', md: '35%', lg: '80%', xl: '85%' },
+              color: '#fff',
+              textTransform: 'none',
+              '&:hover': {
+                backgroundColor: '#80e8cc'
+              }
+            }}
+            variant="contained"
+            onClick={handleAddFaultyTestCasesClick}
+          >
+            Add Test Cases
+          </Button>
+
+              )}
+
+            {showbutton=="Negative Tests" && res!=''  && ( <Button
+                        sx={{
+                          width: { xs: '100%', sm: '50%', md: '30%', lg: '20%', xl: '15%' },
+                          backgroundColor: '#00cca5',
+                          height: '4vh',
+                          borderRadius: '5px',
+                          boxSizing: 'border-box',
+                          marginTop: '1vh',
+                          marginLeft: { xs: '0%', sm: '25%', md: '35%', lg: '80%', xl: '85%' },
+                          color: '#fff',
+                          textTransform: 'none',
+                          '&:hover': {
+                            backgroundColor: '#80e8cc'
+                          }
+                        }}
+                        variant="contained"
+                        onClick={handleRunFaultyTestCasesClick}
+                      >
+                        Run Test
+                      </Button>
+
+                          )}
+            <div className="editor-container" style={{ overflowX: 'hidden' }}>
                   <Editor
-                    height="50vh"
+                   key={forceRerender}
+                   height={height}
+                    // height="50vh"
                     width="100%"
-                    defaultLanguage="json"
-                    defaultValue={res}
+                    defaultLanguage="python"
+                    value={res}
+                    onChange={changeFaultyTestCase}
                     options={{
                       formatOnType: true,
                       formatOnPaste: true,
                       minimap: {
-                        enabled: false
-                      }
-                    }}
+                        enabled: false              
+                      },
+      
+                      language: {
+                        comments: {
+                         lineComment: '#',
+                        },
+                      },
+                      }}
                   />
-                )}
+                  </div>
               </CustomTabPanel>
           </Box>
         </ThemeProvider>
@@ -556,7 +668,8 @@ const SamplePage = () => {
               marginLeft: '0.7%',
               width: '97%',
               position: 'relative',
-              bottom: '0'
+              bottom: '0',
+              height:{height},
             }}
           >
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -591,7 +704,11 @@ const SamplePage = () => {
               {!loadingOverlay && <h3>No Data</h3>}
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={2}>
+           
               <TestResults key={forceRerender} testResultsLists={testResult}></TestResults>
+               {/* }  */}
+               {/* {showbutton==="Negative Tests" && {ng} }  */}
+              {/* {ng} */}
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={3}>
               {!loadingOverlay && <div></div>}

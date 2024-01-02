@@ -78,7 +78,7 @@ const TestSideBarButton = () => {
         }}
         onClick={convertToPython}
       >
-        Convert to Python
+        View In Python
       </Button>
       <Button
         sx={{
