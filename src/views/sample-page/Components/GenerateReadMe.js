@@ -9,7 +9,7 @@ const GenerateReadMe = () => {
         <Typography variant="h5" gutterBottom>
         </Typography>
         <Typography variant="h5">
-          Generation of ReadMe file is in progress...
+          This feature is under build...
         </Typography>
       </Paper>
     </Container>

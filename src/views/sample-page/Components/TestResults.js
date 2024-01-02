@@ -7,7 +7,7 @@ const TestResults = ({ testResult, testResultsLists }) => {
   const [tabIndex, setTabIndex] = useState(0);
   const [responseRecived, setResponseRecived] = useState(true);
   const [testResults, setTestResults] = useState({
-    errors: [],
+errors: [],
     failed_tests: [],
     success_tests: [],
     summary: ''

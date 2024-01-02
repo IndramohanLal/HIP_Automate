@@ -1,4 +1,3 @@
-// material-ui
 import Editor from '@monaco-editor/react';
 import { Divider, Tab, Tabs } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -104,14 +103,22 @@ const SamplePage = () => {
   const [enableRequestDropdown, setEnableRequestDropdown] = useState(true);
   const testResult = useSelector((state) => state.automation.testResult);
 
-  const showFaultyTC=()=>{
-    setShowFaultyTestTab(true)
-  }
+  // const showFaultyTC=()=>{
+  //   setShowFaultyTestTab(true)
+  // }
+
+  useEffect(() => {
+    setUrl(storedUrl || '');
+    setOriginalCode(test_code);
+  }, [code, storedUrl,res]);
 
   const handleAddFaultyTestCasesClick = async () => {
+    let resp;
     try {
-      const response = await axios.get('YOUR_API_ENDPOINT');
-      setRes(response.data);
+      resp = await axios.post(`${baseUrl}/generate_test`)
+      setRes(resp.data.generated_code);
+      console.log(resp.data.generated_code)
+      setValue(5);
     } catch (error) {
       console.error('Error making the request:', error);
     }
@@ -130,16 +137,12 @@ const SamplePage = () => {
   };
   const handleChangeeditor = (newCode) => {
 
-    const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
-    setCode(modifiedCode);
+    // const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
+    setCode(newCode);
     dispatch(setGenraetedTest(newCode));
 
   };
 
-  useEffect(() => {
-    setUrl(storedUrl || '');
-    setOriginalCode(test_code);
-  }, [code, storedUrl]);
 
 
   const handleSend = async () => {
@@ -446,13 +449,15 @@ const SamplePage = () => {
           >
             <Box sx={{ marginLeft: '0.7%', borderBottom: 1, borderColor: 'divider', padding: '10', width: '97%' }}>
             <Tabs value={value} onChange={(event, newValue) => handleChange(event, newValue)} aria-label="basic tabs example">
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Params" {...a11yProps(0)}   onClick={() => setShowFaultyTestTab(false)} />
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Authorization" {...a11yProps(1)}    onClick={() => setShowFaultyTestTab(false)}/>
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Headers" {...a11yProps(2)}   onClick={() => setShowFaultyTestTab(false)} />
-            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)}   onClick={() => setShowFaultyTestTab(false)}  />
-          <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)}  onClick={showFaultyTC}   />
-          
-          { showFaultyTestTab && (
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Params" {...a11yProps(0)}  />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Authorization" {...a11yProps(1)} />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Headers" {...a11yProps(2)}  />
+            <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Body" {...a11yProps(3)}  />
+          <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Tests" {...a11yProps(4)}  />
+          { code!='' && ( <Tab sx={{ padding: '2vh', fontSize: '11px' }} label=" Add More Negative Test Cases" {...a11yProps(5)}
+           onClick={handleAddFaultyTestCasesClick} />)}
+
+          {/* { code!='' && (
            <Button
            sx={{
              padding: '2vh',
@@ -478,7 +483,7 @@ const SamplePage = () => {
            Add Faulty Test Cases
          </Button>
           )         
-              }
+              } */}
 
           </Tabs>
               </Box>
@@ -514,11 +519,11 @@ const SamplePage = () => {
                   enabled: false              
                 },
 
-                language: {
-                  comments: {
-                   lineComment: '#',
-                  },
-                },
+                // language: {
+                //   comments: {
+                //    lineComment: '#',
+                //   },
+                // },
                 }}
                 onChange={handleChangeeditor}
               />
@@ -526,7 +531,6 @@ const SamplePage = () => {
               </div>{' '}
             </CustomTabPanel>
             <CustomTabPanel value={value} index={5}>
-                {addFaultyTestCasesClicked && (
                   <Editor
                     height="50vh"
                     width="100%"
@@ -540,7 +544,6 @@ const SamplePage = () => {
                       }
                     }}
                   />
-                )}
               </CustomTabPanel>
           </Box>
         </ThemeProvider>
