@@ -95,7 +95,9 @@ const SamplePage = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [res,setRes] = useState(negativeTests);
   const [code, setCode] = useState(test_code);
-  const [originalCode, setOriginalCode] = useState(test_code);
+  const [originalCode, setOriginalCode] = useState(useSelector((state) => state.automation.genratedTest));
+  // console.log(originalCode)
+  // console.log(test_code)
   const [addFaultyTestCasesClicked, setAddFaultyTestCasesClicked] = useState(false);
   const [showFaultyTestTab,setShowFaultyTestTab]=useState(false);
   const [isRequestEditable, setIsRequestEditable] = useState(true);//  Indra
@@ -121,18 +123,18 @@ const SamplePage = () => {
     {
     setLoadingOverlay(true);
     try {
-      console.log("faultyTestCaseResult!!!!!!!!!")
+      // console.log("faultyTestCaseResult!!!!!!!!!")
       resp = await axios.post(`${baseUrl}/run_dynamic_tests`,{
         generated_code:res
       })
-      console.log(resp)
-      console.log(resp.data)
+      // console.log(resp)
+      // console.log(resp.data)
       dispatch(setTestResult(resp.data));
       setForceRerender((prev) => !prev);
       seTestResultsLists({ ...resp.data});
-      console
+      // console
       setNg(resp.data.summary)
-      setValue(5);
+      // setValue(6);
       setLoadingOverlay(false);
     } catch (error) {
       console.error('Error making the request:', error);
@@ -151,13 +153,13 @@ const SamplePage = () => {
     {
     setLoadingOverlay(true);
     try {
-      console.log("_____________!!!!!!!!!")
+      // console.log("_____________!!!!!!!!!")
       resp = await axios.post(`${baseUrl}/generate_test`,{ 
         api_url: url,
         http_method: requestType,
         content_type: 'json',} )
       setRes(resp.data.generated_code);
-      console.log(resp.data.generated_code)
+      // console.log(resp.data.generated_code)
       dispatch(setNegativeTc(resp.data.generated_code))
       setValue(5);
       setLoadingOverlay(false);
@@ -182,22 +184,24 @@ const SamplePage = () => {
 
     // const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
     setCode(newCode);
-    dispatch(setGenraetedTest(newCode));
+    // dispatch(setGenraetedTest(newCode));
 
   };
 
   const handleSend = async () => {
-    dispatch(setGenraetedTest(""))
-    dispatch(setNegativeTc(""))
-    dispatch(setTestUrl(url));
+    // dispatch(setGenraetedTest(""))
+    // dispatch(setNegativeTc(""))
     // console.log(code)
+    // console.log(originalCode)
     // console.log(originalCode)
     if (code !== originalCode) {
       const confirm = window.confirm("Previous script data will be lost. Are you sure you want to send the request?");
-      if (confirm) {
-        dispatch(setGenraetedTest('')); 
+      if (confirm) { 
+        dispatch(setGenraetedTest(''));
         setCode(''); 
-        setOriginalCode(''); 
+        setOriginalCode('');
+        // console.log(test_code)
+        // console.log(code)
       } else {
         return;
       }
@@ -229,6 +233,9 @@ const SamplePage = () => {
     let resp;
 
     setLoadingOverlay(true);
+    // console.log("Request BOdy : ", request_body)
+    // console.log("test_code :", res)
+    // console.log("test_code :", code)
     try {
       resp = await axios.post(`${baseUrl}/explore_api_and_generate_test`, {
         user_id: user_id,
@@ -248,10 +255,10 @@ const SamplePage = () => {
         // test_code:code
 
       });
-      console.log(test_code)
+      // console.log(test_code)
       // consolelog("QFEeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-      console.log(resp)
-      console.log(resp.data.result);
+      // console.log(resp)
+      // console.log(resp.data.result);
     
       dispatch(setGenraetedTest(resp.data.test_code));
       dispatch(setTestResult(resp.data.result));
@@ -268,7 +275,7 @@ const SamplePage = () => {
       setDisplaySummary(true);
       
     
-      console.log(resp);
+      // console.log(resp);
       localStorage.setItem("myData", resp.data.code_content);
 
       
@@ -355,7 +362,8 @@ const SamplePage = () => {
 
     dispatch(setTestUrl(newUrl));
     setIsRequestEditable(true);
-
+    setCode("")
+    setRes("")
     setUrl(newUrl);
     setValidUrl(newUrl.startsWith('https://') || newUrl.startsWith('http://'));
 
@@ -562,7 +570,7 @@ const SamplePage = () => {
                 height={height}
                 width="100%"
                 defaultLanguage="python"
-                defaultValue={code}
+                value={code}
                 options={{
                 formatOnType: true,
                 formatOnPaste: true,

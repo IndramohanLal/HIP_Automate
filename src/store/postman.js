@@ -20,7 +20,8 @@ const initialState = {
   isLoggedin: false,
   responseData: "",
   negativeTests:"",
-  negativeTestResult:""
+  negativeTestResult:"",
+  allGeneratedTests: {}
 };
 
 const AutomationSlice = createSlice({
@@ -71,10 +72,13 @@ const AutomationSlice = createSlice({
     setNegativeTestresult:(state,action)=>{
       state.negativeTestResult=action.payload
     },
+    setAllGeneratedTests: (state, action) => {
+      state.allGeneratedTests = action.payload;
+    },
   }
 });
 
-export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl , setJavascriptCode, setIsLoggedIn, setResponseData, setTestResult,resetState,setNegativeTc,setNegativeTestresult  } = AutomationSlice.actions;
+export const { setAuthToken, setHeaderData, setParamsdata, setBodyContentType, setBodyContent, setGenraetedTest, setTestUrl , setJavascriptCode, setIsLoggedIn, setResponseData, setTestResult,resetState,setNegativeTc,setNegativeTestresult, setAllGeneratedTests  } = AutomationSlice.actions;
 export const selectParamsData = (state) => state.Automation.paramsdata;
 
 export default AutomationSlice.reducer;
