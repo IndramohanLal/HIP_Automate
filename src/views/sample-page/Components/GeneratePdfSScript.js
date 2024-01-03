@@ -1,11 +1,43 @@
 import React, { useState } from 'react';
-import { Button, Paper, Typography, Container, Grid, CircularProgress, Tab, Tabs, Box } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  Container,
+  Grid,
+  CircularProgress,
+  Tab,
+  Tabs,
+  Box,
+} from '@mui/material';
 import axios from 'axios';
 import Editor from '@monaco-editor/react';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Button } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const baseUrl = `${process.env.REACT_APP_AUTOMATE}`;
+
+// const countPages = async (file) => {
+//   const data = new FormData();
+//   data.append('file', file);
+
+//   try {
+//     const response = await axios.post(`${baseUrl}/count_pages`, data, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     });
+
+//     if (response.status === 200) {
+//       return response.data.pages;
+//     } else {
+//       throw new Error('Failed to count pages');
+//     }
+//   } catch (error) {
+//     console.error('Error counting pages:', error);
+//     return 'Unknown';
+//   }
+// };
 
 const GeneratePdfScript = () => {
   const [pdfFile, setPdfFile] = useState(null);
@@ -13,20 +45,34 @@ const GeneratePdfScript = () => {
   const [generatedScript, setGeneratedScript] = useState(null);
   const [logs, setLogs] = useState(null);
   const [tabValue, setTabValue] = useState(0);
+  const [fileDetails, setFileDetails] = useState(null);
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
 
     if (file && file.name.endsWith('.pdf')) {
       setPdfFile(file);
+
+      setFileDetails({
+        name: file.name,
+        size: `${(file.size / 1024).toFixed(2)} KB`,
+        
+      });
 
       const reader = new FileReader();
       reader.onload = (e) => {};
       reader.readAsText(file, 'UTF-8');
     } else {
       setPdfFile(null);
+      setFileDetails(null);
       toast.error('Please upload a PDF file.');
       event.target.value = null;
+    }
+  };
+
+  const handleTabChange = (event, newValue) => {
+    if (newValue >= 0 && newValue <= 1) {
+      setTabValue(newValue);
     }
   };
 
@@ -44,6 +90,10 @@ const GeneratePdfScript = () => {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+        onUploadProgress: (progressEvent) => {
+          const progress = (progressEvent.loaded / progressEvent.total) * 100;
+          setUploadProgress(progress);
+        },
       });
 
       if (uploadLogResponse.status === 200) {
@@ -57,6 +107,8 @@ const GeneratePdfScript = () => {
         console.log(scriptData);
         if (scriptData && scriptData.generated_script) {
           setGeneratedScript(scriptData.generated_script);
+          setTabValue(1); // Switch to the "View Generated Script" tab
+          toast.success('Script generated successfully!');
         } else {
           toast.error('Failed to retrieve the generated script.');
         }
@@ -70,10 +122,18 @@ const GeneratePdfScript = () => {
     }
   };
 
-  const handleTabChange = (event, newValue) => {
-    if (newValue >= 0 && newValue <= 1) {
-      setTabValue(newValue);
-    }
+  const handleDropAreaClick = () => {
+    document.getElementById('fileInput').click();
+  };
+
+  const handleFileDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    handleFileChange({ target: { files: [file] } });
+  };
+
+  const handleDragOver = (event) => {
+    event.preventDefault();
   };
 
   return (
@@ -85,8 +145,55 @@ const GeneratePdfScript = () => {
 
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <input type="file" accept=".pdf" onChange={handleFileChange} style={{ width: '100%' }} />
+          <input type="file" accept=".pdf" id="fileInput" style={{ display: 'none' }} onChange={handleFileChange} />
+        <div
+          onClick={handleDropAreaClick}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              handleDropAreaClick();
+            }
+          }}
+          tabIndex={0}
+          onDrop={handleFileDrop}
+          onDragOver={handleDragOver}
+          style={{
+            width: '100%',
+            height: '90px',  // Adjusted height to make it smaller
+            border: '2px dashed #ccc',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            position: 'relative',
+            margin: '0 auto',
+            // marginRight: '25%',  // Centering the drop area
+          }}
+          role="button"
+        >
+
+              {loading && (
+                <CircularProgress
+                  style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+                  color="inherit"
+                />
+              )}
+              {!loading && (
+                <div style={{ textAlign: 'center' }}>
+                  <CloudUploadIcon style={{ fontSize: '3rem', color: '#00cca5' }} />
+                  <Typography variant="body1" style={{ marginTop: '10px' }}>
+                    {pdfFile ? 'PDF Selected' : 'Drag & Drop or Click to Upload PDF'}
+                  </Typography>
+                </div>
+              )}
+            </div>
           </Grid>
+          {fileDetails && (
+            <Grid item xs={12} style={{ marginTop: '10px' }}>
+              <Typography variant="caption" color="textSecondary">
+                File: {fileDetails.name || 'Unknown'}, Size: {fileDetails.size || 'Unknown'}
+              </Typography>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Button
               sx={{
