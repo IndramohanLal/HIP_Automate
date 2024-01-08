@@ -208,9 +208,16 @@ const TestSideBarButton = () => {
       </Grid>
       <Box p={2} style={{ marginTop: '10px', position: "relative" }}>
         {loading && (
-          <CircularProgress
-            size={100}
-          />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '70vh',
+            }}
+  >
+    <CircularProgress size={100} />
+  </div>
         )}
         {!loading && (
           <Editor
@@ -236,6 +243,7 @@ const TestSideBarButton = () => {
             onChange={handleChangeEditor}
           />
         )}
+        {!loading && (
         <Button
           sx={{
             backgroundColor: isCopied ? "#00cca5" : "transparent",
@@ -252,6 +260,7 @@ const TestSideBarButton = () => {
           variant="contained"
           onClick={copyToClipboard}
         >
+         
           {isCopied ? (
             <>
               <IconCheck sx={{ marginRight: '4px' }} />
@@ -264,6 +273,7 @@ const TestSideBarButton = () => {
             </>
           )}
         </Button>
+      )}
       </Box>
     </Box>
   );
