@@ -112,7 +112,7 @@ return (
     <Container maxWidth="xl">
          <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
         <Typography variant="h5" component="div" style={{ marginBottom: '20px', borderBottom: '2px solid #ccc', paddingBottom: '10px' }}>
-          Upload API Document and Generate Script
+          Upload API Log and Generate Script
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -209,7 +209,7 @@ return (
   
         <Box sx={{ marginTop: '20px' }}>
           <Tabs value={tabValue} onChange={handleTabChange} centered>
-            {logs && <Tab label="View Document Details" />}
+            {logs && <Tab label="View Log Details" />}
             {generatedScript && <Tab label="View Generated Script" />}
           </Tabs>
           <TabPanel value={tabValue} index={0}>
