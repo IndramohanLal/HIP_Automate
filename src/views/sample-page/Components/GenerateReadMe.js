@@ -4,7 +4,7 @@ import { CenterFocusStrong } from '@mui/icons-material';
 
 const GenerateReadMe = () => {
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="xxl">
       <Paper elevation={3} style={{ padding: '20px', marginTop: '20px', overflow: 'auto' }}>
         <Typography variant="h5" gutterBottom>
         </Typography>

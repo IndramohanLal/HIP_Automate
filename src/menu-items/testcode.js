@@ -1,5 +1,6 @@
 // assets
 import { IconBrandChrome, IconHelp, IconArrowsMoveVertical, IconScan, IconBook, IconFileDownload, IconFileUpload } from '@tabler/icons';
+import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 
 // constant
 const icons = { IconBrandChrome, IconHelp };
@@ -16,7 +17,7 @@ const other = {
       title: 'Responses',
       type: 'item',
       url: "/response",
-      icon: IconArrowsMoveVertical,
+      icon: <IconArrowsMoveVertical/>,
       breadcrumbs: false
     },
     {
@@ -24,15 +25,7 @@ const other = {
       title: 'Tests',
       type: 'item',
       url: "/test-code",
-      icon: IconScan,
-      breadcrumbs: false
-    },
-    {
-      id: "download-scripts",
-      title: 'Download Scripts',
-      type: 'item',
-      url: "/viewScript",
-      icon: IconFileDownload,
+      icon: <IconScan/>,
       breadcrumbs: false
     },
     {
@@ -40,7 +33,7 @@ const other = {
       title: 'Upload Script',
       type: 'item',
       url: "/upload-script",
-      icon: IconFileUpload,
+      icon: <IconFileUpload/>,
       breadcrumbs: false
     },
     {
@@ -48,7 +41,7 @@ const other = {
       title: 'Generate ReadMe',
       type: 'item',
       url: "/generate-readme",
-      icon: IconBook,
+      icon: <IconBook/>,
       breadcrumbs: false
     },
   ]

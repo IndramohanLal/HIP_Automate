@@ -1,6 +1,7 @@
 // assets
 import { IconBrandChrome, IconHelp,IconCodeCircle2, IconBook, IconFileText, IconFile } from '@tabler/icons';
 
+import CheckIcon from '@mui/icons-material/Check';
 // constant
 const icons = { IconBrandChrome, IconHelp };
 
@@ -10,13 +11,14 @@ const other = {
   id: 'sample-docs-roadmap',
   title: "Test Generator",
   type: 'group',
+  icon:[<CheckIcon key="check"/>],
   children: [
     {
       id: 'regression-test-generator',
       title: 'Test Cases',
       type: 'item',
       url: '/sample-page',
-      icon: IconCodeCircle2,
+      icon:<IconHelp/> ,
       breadcrumbs: false
     },
     {
@@ -24,7 +26,7 @@ const other = {
       title: 'Generate Script Using API Logs',
       type: 'item',
       url: "/generate-script",
-      icon: IconFile,
+      icon: <IconFile/>,
       breadcrumbs: false
     },
     {
@@ -32,7 +34,7 @@ const other = {
       title: 'Generate Script Using PDF',
       type: 'item',
       url: "/generate-pdf-script",
-      icon: IconFileText,
+      icon: <IconFileText/>,
       breadcrumbs: false
     },
     // {

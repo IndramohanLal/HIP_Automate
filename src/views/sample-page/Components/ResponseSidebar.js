@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
-import { Typography } from '@mui/material';
+import { Typography, Paper } from '@mui/material';
 import Editor from '@monaco-editor/react';
-
+import Box from "@mui/material/Box";
+ 
 const ResponseSidebar = () => {
     const storedDataString = localStorage.getItem("myData");
     console.log(storedDataString)
     let formattedData = null; // Initialize to null
-
+ 
     if (storedDataString !== null) {
         try {
             const parsedData = JSON.parse(storedDataString);
@@ -15,22 +16,22 @@ const ResponseSidebar = () => {
             console.error("Error parsing JSON:", error);
         }
     }
-
+ 
     useEffect(() => {
         const handleBeforeUnload = () => {
             // Clear the data from local storage
             localStorage.removeItem("myData");
         };
-
+ 
         // Attach the event listener
         window.addEventListener("beforeunload", handleBeforeUnload);
-
+ 
         // Clean up the event listener when the component is unmounted
         return () => {
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, []); // The empty dependency array ensures that the effect runs only once
-
+ 
     return (
         <div>
             {formattedData !== null ? (
@@ -52,32 +53,15 @@ const ResponseSidebar = () => {
                     </div>
                 </Typography>
             ) : (
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-                    <Typography
-                        sx={{
-                            fontFamily: 'monospace',
-                            fontSize: '30px',
-                            whiteSpace: 'pre-wrap',
-                            wordWrap: 'break-word',
-                            padding: '10px',
-                            backgroundColor: 'white',
-                            borderRadius: '10px',
-                            color: '#333',
-                            marginLeft: '10px',
-                            boxShadow: '0 0 30px rgba(0, 0, 0, 0.1)',
-                            overflow: 'auto',
-                            width: "80%", // Adjust width as needed
-                            maxWidth: "500px", // Adjust maxWidth as needed
-                            textAlign: "center",
-                            fontWeight: "bold",
-                        }}
-                    >
-                        No Response
-                    </Typography>
-                </div>
+                // <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", width: "100%", maxWidth: "100%" }}>
+                <Box p={2}>
+                <Paper elevation={3} style={{ padding: "16px", textAlign: "center" }}>
+                  <Typography variant="h4">No Response Available</Typography>
+                </Paper>
+              </Box>
             )}
         </div>
     );
 };
-
+ 
 export default ResponseSidebar;

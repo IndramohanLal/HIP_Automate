@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import { Resizable } from 're-resizable';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setGenraetedTest, setNegativeTc, setTestResult, setTestUrl } from 'store/postman';
+import { setGenraetedTest, setNegativeTc, setNegativeTestresult, setTestResult, setTestUrl } from 'store/postman';
 import {setResponseData} from 'store/postman'
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
@@ -67,6 +67,33 @@ function a11yProps1(index) {
   };
 }
 
+const getStatusMessage = (statusCode) => {
+  switch (statusCode) {
+    case 200:
+      return 'OK';
+    case 201:
+      return 'Created';
+    case 204:
+      return 'No Content';
+    case 400:
+      return 'Bad Request';
+    case 401:
+      return 'Unauthorized';
+    case 403:
+      return 'Forbidden';
+    case 404:
+      return 'Not Found';
+    case 500:
+      return 'Internal Server Error';
+    case 502:
+      return 'Bad Gateway';
+    case 503:
+      return 'Service Unavailable';
+    default:
+      return '';
+  }
+};
+
 const SamplePage = () => {
   const [displaySummary, setDisplaySummary] = useState(false);
   const [loadingOverlay, setLoadingOverlay] = useState(false);
@@ -85,7 +112,7 @@ const SamplePage = () => {
   const negativeTests = useSelector((state) => state.automation.negativeTests);
   const dispatch = useDispatch();
   const [testResults, seTestResults] = useState(null);
-  const [testResultsLists, seTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
+  // const [testResultsLists, seTestResultsLists] = useState({ errors: [], failed_tests: [], success_tests: [] });
   const [height, setHeight] = useState('50vh');
   const [responseBody, setResponseBody] = useState('');
 
@@ -104,9 +131,12 @@ const SamplePage = () => {
   const storedUrl = useSelector((state) => state.automation.url);
   const [enableRequestDropdown, setEnableRequestDropdown] = useState(true);
   const testResult = useSelector((state) => state.automation.testResult);
-  const ngTestResult=useSelector((state) => state.automation.negativeTestResult);
+  const negativeTestResult=useSelector((state) => state.automation.negativeTestResult);
   const [ng,setNg]=useState("")
   const [showbutton, setShowButton] = useState("");
+
+  const [status, setStatus] = useState("")
+  const [responseMessages, setResponseMessages] = useState('');
 
   const changeFaultyTestCase=(newCodee)=>{
     setRes(newCodee)
@@ -115,7 +145,7 @@ const SamplePage = () => {
   useEffect(() => {
     setUrl(storedUrl || '');
     // setOriginalCode(test_code);
-  }, [code, storedUrl,dispatch,ng,res]);
+  }, [code,storedUrl,dispatch,ng,res]);
  
   const  handleRunFaultyTestCasesClick=async()=>{
     let resp;
@@ -129,7 +159,8 @@ const SamplePage = () => {
       })
       // console.log(resp)
       // console.log(resp.data)
-      dispatch(setTestResult(resp.data));
+      // dispatch(setTestResult(resp.data));
+      dispatch(setNegativeTestresult(resp.data))
       setForceRerender((prev) => !prev);
       seTestResultsLists({ ...resp.data});
       // console
@@ -184,7 +215,7 @@ const SamplePage = () => {
 
     // const modifiedCode = newCode.replace(/\/\/\s*/g, '# ');
     setCode(newCode);
-    // dispatch(setGenraetedTest(newCode));
+    dispatch(setGenraetedTest(newCode));
 
   };
 
@@ -259,7 +290,8 @@ const SamplePage = () => {
       // consolelog("QFEeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
       // console.log(resp)
       // console.log(resp.data.result);
-    
+      setStatus(resp.status)
+      setResponseMessages(getStatusMessage(resp.status));
       dispatch(setGenraetedTest(resp.data.test_code));
       dispatch(setTestResult(resp.data.result));
       setIsRequestEditable(false);
@@ -365,6 +397,8 @@ const SamplePage = () => {
     setCode("")
     setRes("")
     setUrl(newUrl);
+    dispatch(setTestResult(""))
+    dispatch(setNegativeTestresult(""))
     setValidUrl(newUrl.startsWith('https://') || newUrl.startsWith('http://'));
 
     const isUrlChanged = newUrl.trim() !== storedUrl.trim();
@@ -677,7 +711,8 @@ const SamplePage = () => {
               width: '97%',
               position: 'relative',
               bottom: '0',
-              height:{height},
+              // height:'70vh',
+              minHeight:"200px",
             }}
           >
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -685,6 +720,20 @@ const SamplePage = () => {
                 <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Response" {...a11yProps1(0)} />
                 <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Header" {...a11yProps1(1)} />
                 <Tab sx={{ padding: '2vh', fontSize: '11px' }} label="Test Results" {...a11yProps1(2)} />
+                <Typography
+                  sx={{
+                          padding: '2vh', fontSize: '13px',
+                          marginLeft: 'auto',
+                          marginRight: '2vw',
+                          textAlign: 'center',
+                          '@media screen and (max-width: 600px)': {
+                            marginLeft: '2vw',
+                          },
+                          '@media screen and (max-width: 400px)': {
+                            marginLeft: '1vw',
+                          },
+                      }}
+                  >{status}  {responseMessages}</Typography>
               </Tabs>
             </Box>
             <CustomTabPanel value={value1} index={0}>
@@ -713,7 +762,10 @@ const SamplePage = () => {
             </CustomTabPanel>
             <CustomTabPanel value={value1} index={2}>
            
-              <TestResults key={forceRerender} testResultsLists={testResult}></TestResults>
+            {showbutton!=="Negative Tests" && <TestResults key={forceRerender} testResultsLists={testResult}></TestResults>}
+           {/* {console.log(testResult)}
+           {console.log('negativeTestResult',negativeTestResult)} */}
+             {showbutton==="Negative Tests" && <TestResults key={forceRerender} testResultsLists={negativeTestResult}></TestResults> }
                {/* }  */}
                {/* {showbutton==="Negative Tests" && {ng} }  */}
               {/* {ng} */}

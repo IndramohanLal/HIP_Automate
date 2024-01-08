@@ -7,8 +7,11 @@ const icons = { IconDashboard };
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
 const dashboard = {
+  title:'dashboard',
   id: 'dashboard',
   type: 'group',
+  icon: icons.IconDashboard,
+  // url: '/dashboard/default',
   children: [
     {
       id: 'default',
