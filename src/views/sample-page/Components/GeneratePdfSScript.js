@@ -82,7 +82,7 @@ const GeneratePdfScript = () => {
           mode: 'no-cors',
         });
         const scriptData = generateScriptResponse.data;
-        console.log(scriptData);
+        // console.log(scriptData);
         if (scriptData && scriptData.generated_script) {
           setGeneratedScript(scriptData.generated_script);
           setTabValue(1); // Switch to the "View Generated Script" tab

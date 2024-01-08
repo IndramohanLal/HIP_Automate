@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
  
 const ResponseSidebar = () => {
     const storedDataString = localStorage.getItem("myData");
-    console.log(storedDataString)
+    // console.log(storedDataString)
     let formattedData = null; // Initialize to null
  
     if (storedDataString !== null) {

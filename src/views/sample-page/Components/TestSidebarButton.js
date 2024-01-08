@@ -122,7 +122,7 @@ const TestSideBarButton = () => {
       try {
         const response = await axios.get(`${baseUrl}/get_all_generated_tests`);
         const generatedTests = response.data;
-        console.log(generatedTests);
+        // console.log(generatedTests);
  
         if (Object.keys(generatedTests).length > 0) {
           dispatch(setAllGeneratedTests(generatedTests));

@@ -56,7 +56,7 @@ const TestScriptGenerator = () => {
 
   const handleHitTestScript = async () => {
     try {
-      console.log('uploadLogResponse')
+      // console.log('uploadLogResponse')
       if (!jsonFile) {
         alert('Please select a JSON file.');
         return;
@@ -70,7 +70,7 @@ const TestScriptGenerator = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('uploadLogResponse',uploadLogResponse)
+      // console.log('uploadLogResponse',uploadLogResponse)
 
       if (uploadLogResponse.status === 200) {
         setLogs(uploadLogResponse.data);
