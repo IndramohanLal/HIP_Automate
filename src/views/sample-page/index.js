@@ -25,6 +25,7 @@ import KeyValueTable from './Components/Params';
 import TestResults from './Components/TestResults';
 import 'react-toastify/dist/ReactToastify.css';
 import './Components/common.css';
+import { green } from '@mui/material/colors';
 const Theme = createTheme({
   palette: {
     primary: {
@@ -146,6 +147,9 @@ const SamplePage = () => {
     setUrl(storedUrl || '');
     // setOriginalCode(test_code);
   }, [code,storedUrl,dispatch,ng,res]);
+  
+
+
  
   const  handleRunFaultyTestCasesClick=async()=>{
     let resp;
@@ -605,12 +609,15 @@ const SamplePage = () => {
                 width="100%"
                 defaultLanguage="python"
                 value={code}
+          
                 options={{
                 formatOnType: true,
                 formatOnPaste: true,
+                lineHeight: 20,
                 minimap: {
                   enabled: false              
                 },
+                
 
                 language: {
                   comments: {
@@ -733,7 +740,10 @@ const SamplePage = () => {
                             marginLeft: '1vw',
                           },
                       }}
-                  >{status}  {responseMessages}</Typography>
+
+                  > {status===200 ? (<span style={{color:"green"}}>{status}  {responseMessages}</span>):( <span>{status}  {responseMessages}</span>) } 
+                 
+                  </Typography>
               </Tabs>
             </Box>
             <CustomTabPanel value={value1} index={0}>
