@@ -2,35 +2,26 @@ import React, { useEffect } from "react";
 import { Typography, Paper } from '@mui/material';
 import Editor from '@monaco-editor/react';
 import Box from "@mui/material/Box";
+import { useDispatch, useSelector } from 'react-redux';
+
+
  
 const ResponseSidebar = () => {
-    const storedDataString = localStorage.getItem("myData");
-    // console.log(storedDataString)
-    let formattedData = null; // Initialize to null
+    const responseData = useSelector((state) => state.automation.responseData);
+
+
+    let formattedData = null; 
  
-    if (storedDataString !== null) {
+    if (responseData !== null) {
         try {
-            const parsedData = JSON.parse(storedDataString);
+            const parsedData = JSON.parse(responseData);
             formattedData = JSON.stringify(parsedData, null, 2);
         } catch (error) {
             console.error("Error parsing JSON:", error);
         }
     }
  
-    useEffect(() => {
-        const handleBeforeUnload = () => {
-            // Clear the data from local storage
-            localStorage.removeItem("myData");
-        };
- 
-        // Attach the event listener
-        window.addEventListener("beforeunload", handleBeforeUnload);
- 
-        // Clean up the event listener when the component is unmounted
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, []); // The empty dependency array ensures that the effect runs only once
+    
  
     return (
         <div>

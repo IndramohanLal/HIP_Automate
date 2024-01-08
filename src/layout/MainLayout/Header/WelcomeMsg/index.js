@@ -21,7 +21,7 @@ const WelcomeMsg = () => {
         <h1 className="welcome-text">{greeting},&nbsp;</h1>
         <h1 className="welcome-name">{username}</h1>
       </div>
-      <h3 className="welcome-sub-text">Your performance summary this week</h3>
+      <h3 className="welcome-sub-text">Your Performance Summary</h3>
     </div>
   );
 };
